@@ -1,0 +1,3 @@
+model_save_dir: models/extra_small_4b
+precision: 4
+name: extra

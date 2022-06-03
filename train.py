@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import h5py
 import argparse
-from distilled_model import create_distilled_model, create_quantized_distilled_model, create_smaller_quantized_distilled_model, create_extra_small_quantized_distilled_model
+from distilled_model import create_distilled_model, create_mlp_avg_pool, create_mlp_max_pool
+#, create_quantized_distilled_model, create_extra_small_quantized_distilled_model
 from sklearn.model_selection import train_test_split
 import yaml
 
@@ -53,9 +54,8 @@ def main(args):
     # define model
     print(config['name'])
     model = create_distilled_model() if 'float' in config['name'] \
-        else create_quantized_distilled_model(config['precision']) if 'quant' in config['name']  \
-        else create_smaller_quantized_distilled_model(config['precision']) if 'small' in config['name'] \
-        else create_extra_small_quantized_distilled_model(config['precision']) if 'extra' in config['name'] \
+        else create_mlp_avg_pool(config['precision']) if 'avg_pool' in config['name'] \
+        else create_mlp_max_pool(config['precision']) if 'max_pool' in config['name'] \
         else None
     optimizer = 'adam'
     loss = 'mse'

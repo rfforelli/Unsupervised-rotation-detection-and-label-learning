@@ -1,0 +1,3 @@
+model_save_dir: models/mlp_max_pool_12b
+precision: 12
+name: max_pool

@@ -40,29 +40,25 @@ def main(args):
         os.makedirs(OUTPUT_DIR)
 
     post_process(MODEL, OUTPUT_DIR)
-
-    # os.environ['PATH'] = "/tools/Xilinx/Vivado/2019.1/bin:" + os.environ['PATH']
-
-    # config = hls4ml.utils.config_from_keras_model(MODEL, granularity='name')
-    # config['Model']['ReuseFactor'] = REUSE_FACTOR
-    # # config['SkipOptimizers'] = ['reshape_stream']
-    # config['SkipOptimizers']= ['relu_merge']
-    # config['Model']['Strategy'] = 'Resource'
-    # for layer in config['LayerName'].keys():
-    #     config['LayerName'][layer]['Trace'] = True
-    #     config['LayerName'][layer]['ReuseFactor'] = REUSE_FACTOR
-
-
-    # print_dict(config)
-    # hls_model = hls4ml.converters.convert_from_keras_model(MODEL,
-    #                                                     hls_config=config,
-    #                                                     output_dir=HLS_OUTPUT_DIR,
-    #                                                     part='xcu250-figd2104-2L-e',
-    #                                                     io_type='io_stream')
-    # hls_model.compile()
-    # post_process(hls_model, HLS_OUTPUT_DIR)
-    # hls_model.build(csim=False,synth=True, vsynth=True, export=True)
     
+    os.environ['PATH'] = "/tools/Xilinx/Vivado/2019.2/bin:" + os.environ['PATH']
+
+    config = hls4ml.utils.config_from_keras_model(MODEL, granularity='name')
+    config['Model']['ReuseFactor'] = REUSE_FACTOR
+    # config['SkipOptimizers'] = ['reshape_stream']
+    config['SkipOptimizers']= ['relu_merge']
+    config['Model']['Strategy'] = 'Resource'
+    for layer in config['LayerName'].keys():
+        config['LayerName'][layer]['Trace'] = True
+        config['LayerName'][layer]['ReuseFactor'] = REUSE_FACTOR
+
+
+    print_dict(config)
+    hls_model = hls4ml.converters.convert_from_keras_model(MODEL,
+                                                        hls_config=config,
+                                                        output_dir=HLS_OUTPUT_DIR,
+                                                        part='xcu200-fsgd2104-2-e',
+                                                        io_type='io_stream')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -13,6 +13,9 @@ from distilled_model import create_distilled_model, create_mlp_avg_pool, create_
 from sklearn.model_selection import train_test_split
 import yaml
 
+os.system('pip install setGPU')
+os.system('pip install tensorflow')
+os.system('pip install git+https://GitHub.com/julesmuhizi/qkeras.git@qdense_batchnorm')
 
 def yaml_load(config):
     with open(config, 'r') as stream:
@@ -71,6 +74,12 @@ def main(args):
                     validation_split=0.2,)
 
     model.save('{}/model.h5'.format(config['model_save_dir']))
+
+    model_json = model.to_json()
+    with open('{}/model_arch_.json'.format(config['model_save_dir']), "w") as json_file:
+        json_file.write(model_json)
+    model.save_weights('{}/model_weights_.h5'.format(config['model_save_dir']))
+    print("Saved model to disk")
 
     # get predictions
     y_pred = model.predict(X_test)

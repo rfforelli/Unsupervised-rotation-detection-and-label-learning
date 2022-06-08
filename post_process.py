@@ -1,6 +1,6 @@
 import os
 from turtle import right
-os.environ['CUDA_VISIBLE_DEVICES']  = '0'
+#os.environ['CUDA_VISIBLE_DEVICES']  = '0'
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
@@ -9,7 +9,7 @@ import h5py
 
 def post_process(model, output_dir):
 
-    img = np.load('02_scan_x256_y256_raw.npy')
+    img = np.load('/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/02_scan_x256_y256_raw.npy')
     img = np.transpose(img,(2,3,0,1))
     data_r = np.copy(img)
     data_r[data_r>1e3]=1e3
@@ -24,13 +24,13 @@ def post_process(model, output_dir):
     X = data_r_cut.reshape(-1, 120,120)
 
     # generate outputs/targets
-    dataset_h5 = h5py.File('unbinned_results.h5','r+')
+    dataset_h5 = h5py.File('/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/unbinned_results.h5','r+')
     rots = np.array(dataset_h5['rotation'])
     scal = np.array(dataset_h5['scale'])
     y = np.concatenate((rots, scal), axis=1)
     sc = StandardScaler()
     _ = sc.fit(y)
-    base_8 = np.load('base_8.npy', allow_pickle=1)
+    base_8 = np.load('/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/base_8.npy', allow_pickle=1)
 
 
     predictions = model.predict(np.ascontiguousarray(X))

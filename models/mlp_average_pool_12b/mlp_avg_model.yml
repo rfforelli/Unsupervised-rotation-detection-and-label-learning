@@ -1,0 +1,3 @@
+model: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/model.h5
+output_dir: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test
+reuse_factor: 1

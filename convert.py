@@ -1,10 +1,14 @@
 import hls4ml
 import keras
 import os
+
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
 from qkeras.utils import _add_supported_quantized_objects
 import argparse
 import yaml
 from post_process import post_process
+from build import build
 
 
 def yaml_load(config):
@@ -59,6 +63,9 @@ def main(args):
                                                         output_dir=HLS_OUTPUT_DIR,
                                                         part='xcu200-fsgd2104-2-e',
                                                         io_type='io_stream')
+
+    build(hls_model)
+    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

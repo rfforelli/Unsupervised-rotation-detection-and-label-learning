@@ -51,10 +51,21 @@ def main(args):
     config['Model']['ReuseFactor'] = REUSE_FACTOR
     # config['SkipOptimizers'] = ['reshape_stream']
     config['SkipOptimizers']= ['relu_merge']
-    config['Model']['Strategy'] = 'Resource'
+    config['Model']['Strategy'] = 'Latency'
+    
+    
     for layer in config['LayerName'].keys():
         config['LayerName'][layer]['Trace'] = True
         config['LayerName'][layer]['ReuseFactor'] = REUSE_FACTOR
+        
+    #config['LayerName']['q_dense']['ReuseFactor'] = 32 #added
+    #config['LayerName']['q_dense']['Strategy'] = 'Latency' #added
+    #config['LayerName']['q_dense_1']['ReuseFactor'] = 32 #added
+    #config['LayerName']['q_dense_1']['Strategy'] = 'Latency' #added
+    #config['LayerName']['q_dense_2']['ReuseFactor'] = 32 #added
+    #config['LayerName']['q_dense_2']['Strategy'] = 'Latency' #added
+    #config['LayerName']['q_dense_3']['ReuseFactor'] = 32 #added
+    #config['LayerName']['q_dense_3']['Strategy'] = 'Latency' #added
 
 
     print_dict(config)

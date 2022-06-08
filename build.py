@@ -10,5 +10,4 @@ def build(hls_model):
     
     hls_model.build()
 
-    #Print out the report if you want
     hls4ml.report.read_vivado_report('my-hls-test')

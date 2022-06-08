@@ -4,5 +4,7 @@ created on 11.16.2021
 To convert
 
 ```
-python3 /.../convert.py -c mlp_avg_model.yml
+python3 convert.py -c mlp_avg_model.yml
 ```
+
+Directories in post_process.py or convert.py may need to be changed.

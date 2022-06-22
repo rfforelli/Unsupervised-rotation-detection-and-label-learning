@@ -1,8 +1,4 @@
 all:
-	conda env create -f environment.yml
-	conda activate 4d_tem
-	gdown https://drive.google.com/u/1/uc?id=1eYr5gRK84Wt1K-se14qMpxqWGjaiKq6U&export=download
-	mv 02_scan_x256_y256_raw.npy data/02_scan_x256_y256_raw.npy
 
 setup:
 	mkdir -p ./models/mlp_average_pool_12b/profiling
@@ -27,3 +23,4 @@ clean:
 	rm -f *.log
 	rm -rf myproject_vivado_accelerator
 	rm -rf xclbin_files
+	rm -rf .ipynb_checkpoints

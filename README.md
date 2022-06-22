@@ -1,10 +1,18 @@
 # Unsupervised-rotation-detection-and-label-learning
 created on 11.16.2021
 
-To convert
+## Build Instructions
 
-```
-python3 convert.py -c mlp_avg_model.yml
-```
+To execute notebook...
 
-Directories in post_process.py or convert.py may need to be changed.
+1. `cd Unsupervised-rotation-detection-and-label-learning`
+2. `make` to setup conda environment
+3. `make build` to run jupyter notebook
+
+To clean, `make clean`
+
+Due to the Vivado Y2K22 issue, the jupyter notebook must be run using nbconvert.
+
+Requirements
+- Anaconda
+- Vivado 2020.1 (preferred)

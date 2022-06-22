@@ -1,3 +1,0 @@
-model_save_dir: models/mlp_average_pool_12b
-precision: 12
-name: avg_pool

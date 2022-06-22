@@ -135,4 +135,9 @@ dependencies:
     - werkzeug==2.1.1
     - wrapt==1.14.0
     - zipp==3.8.0
+    - git+https://GitHub.com/julesmuhizi/qkeras.git@qdense_batchnorm
+    - gdown
+    - pyaml
+    - git+https://github.com/rfforelli/hls4ml.git
+    - faketime
 prefix: /home/jmuhizi/miniforge3/envs/4d_tem

@@ -1,4 +1,0 @@
-model_save_dir: models/extra_small_8b
-precision: 8
-name: extra
-

@@ -1,0 +1,312 @@
+INFO: [v++ 60-1306] Additional information associated with this v++ link can be found at:
+	Reports: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link
+	Log files: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/logs/link
+INFO: [v++ 60-1657] Initializing dispatch client.
+INFO: [v++ 60-1548] Creating build summary session with primary output /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin.link_summary, at Tue Jun 29 10:47:23 2021
+INFO: [v++ 60-1316] Initiating connection to rulecheck server, at Tue Jun 29 10:47:23 2021
+INFO: [v++ 60-1315] Creating rulecheck session with output '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/v++_link_myproject_kernel_guidance.html', at Tue Jun 29 10:47:24 2021
+INFO: [v++ 60-895]   Target platform: /opt/xilinx/platforms/xilinx_u250_xdma_201830_2/xilinx_u250_xdma_201830_2.xpfm
+INFO: [v++ 60-1578]   This platform contains Device Support Archive '/opt/xilinx/platforms/xilinx_u250_xdma_201830_2/hw/xilinx_u250_xdma_201830_2.dsa'
+INFO: [v++ 60-1302] Platform 'xilinx_u250_xdma_201830_2.xpfm' has been explicitly enabled for this release.
+INFO: [v++ 60-629] Linking for hardware target
+INFO: [v++ 60-423]   Target device: xilinx_u250_xdma_201830_2
+INFO: [v++ 60-1332] Run 'run_link' status: Not started
+INFO: [v++ 60-1443] [10:47:30] Run run_link: Step system_link: Started
+INFO: [v++ 60-1453] Command Line: system_link --xo /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xo_files/myproject_kernel.xo --xpfm /opt/xilinx/platforms/xilinx_u250_xdma_201830_2/xilinx_u250_xdma_201830_2.xpfm --target hw --output_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int --temp_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link
+INFO: [v++ 60-1454] Run Directory: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link
+INFO: [SYSTEM_LINK 60-1316] Initiating connection to rulecheck server, at Tue Jun 29 10:47:31 2021
+INFO: [SYSTEM_LINK 82-70] Extracting xo v3 file /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xo_files/myproject_kernel.xo
+INFO: [SYSTEM_LINK 82-53] Creating IP database /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/_sysl/.cdb/xd_ip_db.xml
+INFO: [SYSTEM_LINK 82-38] [10:47:31] build_xd_ip_db started: /home/ferroelectric/Xilinx_2020/Vitis/2020.1/bin/build_xd_ip_db -ip_search 0  -sds-pf /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/xilinx_u250_xdma_201830_2.hpfm -clkid 0 -ip /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/iprepo/fastmachinelearning_org_hls4ml_krnl_rtl_1_0,krnl_rtl -o /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/_sysl/.cdb/xd_ip_db.xml
+INFO: [SYSTEM_LINK 82-37] [10:47:33] build_xd_ip_db finished successfully
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 1420.320 ; gain = 0.000 ; free physical = 41182 ; free virtual = 86796
+INFO: [SYSTEM_LINK 82-51] Create system connectivity graph
+INFO: [SYSTEM_LINK 82-102] Applying explicit connections to the system connectivity graph: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/cfgraph/cfgen_cfgraph.xml
+INFO: [SYSTEM_LINK 82-38] [10:47:33] cfgen started: /home/ferroelectric/Xilinx_2020/Vitis/2020.1/bin/cfgen -dmclkid 0 -r /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/_sysl/.cdb/xd_ip_db.xml -o /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/cfgraph/cfgen_cfgraph.xml
+INFO: [CFGEN 83-0] Kernel Specs: 
+INFO: [CFGEN 83-0]   kernel: krnl_rtl, num: 1  {krnl_rtl_1}
+INFO: [CFGEN 83-2226] Inferring mapping for argument krnl_rtl_1.fifo_in to DDR[0]
+INFO: [CFGEN 83-2226] Inferring mapping for argument krnl_rtl_1.fifo_out to DDR[0]
+INFO: [SYSTEM_LINK 82-37] [10:47:36] cfgen finished successfully
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1420.320 ; gain = 0.000 ; free physical = 41182 ; free virtual = 86796
+INFO: [SYSTEM_LINK 82-52] Create top-level block diagram
+INFO: [SYSTEM_LINK 82-38] [10:47:36] cf2bd started: /home/ferroelectric/Xilinx_2020/Vitis/2020.1/bin/cf2bd  --linux --trace_buffer 1024 --input_file /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/cfgraph/cfgen_cfgraph.xml --ip_db /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/_sysl/.cdb/xd_ip_db.xml --cf_name dr --working_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/_sysl/.xsd --temp_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link --output_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int --target_bd pfm_dynamic.bd
+INFO: [CF2BD 82-31] Launching cf2xd: cf2xd -linux -trace-buffer 1024 -i /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/cfgraph/cfgen_cfgraph.xml -r /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/_sysl/.cdb/xd_ip_db.xml -o dr.xml
+INFO: [CF2BD 82-28] cf2xd finished successfully
+INFO: [CF2BD 82-31] Launching cf_xsd: cf_xsd -disable-address-gen -bd pfm_dynamic.bd -dn dr -dp /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link/_sysl/.xsd
+INFO: [CF2BD 82-28] cf_xsd finished successfully
+INFO: [SYSTEM_LINK 82-37] [10:47:38] cf2bd finished successfully
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1420.320 ; gain = 0.000 ; free physical = 41174 ; free virtual = 86793
+INFO: [v++ 60-1441] [10:47:38] Run run_link: Step system_link: Completed
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:08 . Memory (MB): peak = 1329.262 ; gain = 0.000 ; free physical = 41205 ; free virtual = 86818
+INFO: [v++ 60-1443] [10:47:38] Run run_link: Step cf2sw: Started
+INFO: [v++ 60-1453] Command Line: cf2sw -sdsl /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/sdsl.dat -rtd /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/cf2sw.rtd -xclbin /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xclbin_orig.xml -o /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xclbin_orig.1.xml
+INFO: [v++ 60-1454] Run Directory: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link
+INFO: [v++ 60-1441] [10:47:39] Run run_link: Step cf2sw: Completed
+Time (s): cpu = 00:00:00.98 ; elapsed = 00:00:01 . Memory (MB): peak = 1329.262 ; gain = 0.000 ; free physical = 41203 ; free virtual = 86817
+INFO: [v++ 60-1443] [10:47:39] Run run_link: Step rtd2_system_diagram: Started
+INFO: [v++ 60-1453] Command Line: rtd2SystemDiagram
+INFO: [v++ 60-1454] Run Directory: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link
+INFO: [v++ 60-1441] [10:47:40] Run run_link: Step rtd2_system_diagram: Completed
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.76 . Memory (MB): peak = 1329.262 ; gain = 0.000 ; free physical = 40779 ; free virtual = 86393
+INFO: [v++ 60-1443] [10:47:40] Run run_link: Step vpl: Started
+INFO: [v++ 60-1453] Command Line: vpl -t hw -f xilinx_u250_xdma_201830_2 --remote_ip_cache /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/.ipcache --user_ip_repo_paths /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/impl/ip --output_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int --log_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/logs/link --report_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link --config /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/vplConfig.ini -k /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/kernel_info.dat --webtalk_flag Vitis --temp_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link --no-info --iprepo /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xo/ip_repo/fastmachinelearning_org_hls4ml_krnl_rtl_1_0 --messageDb /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link/vpl.pb /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/dr.bd.tcl
+INFO: [v++ 60-1454] Run Directory: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link
+
+****** vpl v2020.1 (64-bit)
+  **** SW Build 2902540 on Wed May 27 19:54:35 MDT 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+INFO: [VPL 60-839] Read in kernel information from file '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/kernel_info.dat'.
+INFO: [VPL 60-423]   Target device: xilinx_u250_xdma_201830_2
+INFO: [VPL 60-1032] Extracting hardware platform to /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/.local/hw_platform
+[10:47:59] Run vpl: Step create_project: Started
+Creating Vivado project.
+[10:48:01] Run vpl: Step create_project: Completed
+[10:48:01] Run vpl: Step create_bd: Started
+[10:48:46] Run vpl: Step create_bd: Completed
+[10:48:46] Run vpl: Step update_bd: Started
+[10:48:46] Run vpl: Step update_bd: Completed
+[10:48:46] Run vpl: Step generate_target: Started
+[10:50:01] Run vpl: Step generate_target: Completed
+[10:50:01] Run vpl: Step config_hw_runs: Started
+[10:50:05] Run vpl: Step config_hw_runs: Completed
+[10:50:05] Run vpl: Step synth: Started
+[10:50:36] Block-level synthesis in progress, 7 of 26 jobs complete, 8 jobs running.
+[10:51:06] Block-level synthesis in progress, 21 of 26 jobs complete, 5 jobs running.
+[10:51:36] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:52:07] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:52:37] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:53:07] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:53:37] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:54:07] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:54:37] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:55:07] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:55:37] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:56:07] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:56:37] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:57:08] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:57:38] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:58:08] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:58:38] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:59:08] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[10:59:38] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[11:00:08] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[11:00:38] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[11:01:08] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[11:01:39] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[11:02:09] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[11:02:39] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[11:03:09] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[11:03:39] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[11:04:09] Block-level synthesis in progress, 25 of 26 jobs complete, 1 job running.
+[11:04:39] Block-level synthesis in progress, 26 of 26 jobs complete, 0 jobs running.
+[11:05:09] Top-level synthesis in progress.
+[11:05:40] Top-level synthesis in progress.
+[11:06:10] Top-level synthesis in progress.
+[11:06:40] Top-level synthesis in progress.
+[11:07:09] Run vpl: Step synth: Completed
+[11:07:09] Run vpl: Step impl: Started
+[11:21:43] Finished 2nd of 6 tasks (FPGA linking synthesized kernels to platform). Elapsed time: 00h 34m 01s 
+
+[11:21:43] Starting logic optimization..
+[11:22:13] Phase 1 Generate And Synthesize MIG Cores
+[11:25:14] Phase 2 Generate And Synthesize Debug Cores
+[11:27:14] Phase 3 Retarget
+[11:27:14] Phase 4 Constant propagation
+[11:27:14] Phase 5 Sweep
+[11:27:44] Phase 6 BUFG optimization
+[11:28:15] Phase 7 Shift Register Optimization
+[11:28:15] Phase 8 Post Processing Netlist
+[11:29:45] Finished 3rd of 6 tasks (FPGA logic optimization). Elapsed time: 00h 08m 02s 
+
+[11:29:45] Starting logic placement..
+[11:30:15] Phase 1 Placer Initialization
+[11:30:15] Phase 1.1 Placer Initialization Netlist Sorting
+[11:33:16] Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
+[11:33:46] Phase 1.3 Build Placer Netlist Model
+[11:35:47] Phase 1.4 Constrain Clocks/Macros
+[11:35:47] Phase 2 Global Placement
+[11:35:47] Phase 2.1 Floorplanning
+[11:36:17] Phase 2.1.1 Partition Driven Placement
+[11:36:17] Phase 2.1.1.1 PBP: Partition Driven Placement
+[11:37:17] Phase 2.1.1.2 PBP: Clock Region Placement
+[11:38:18] Phase 2.1.1.3 PBP: Compute Congestion
+[11:38:18] Phase 2.1.1.4 PBP: UpdateTiming
+[11:38:18] Phase 2.1.1.5 PBP: Add part constraints
+[11:38:48] Phase 2.2 Global Placement Core
+[11:44:21] Phase 2.2.1 Physical Synthesis In Placer
+[11:46:52] Phase 3 Detail Placement
+[11:46:52] Phase 3.1 Commit Multi Column Macros
+[11:47:22] Phase 3.2 Commit Most Macros & LUTRAMs
+[11:47:22] Phase 3.3 Area Swap Optimization
+[11:47:52] Phase 3.4 Pipeline Register Optimization
+[11:47:52] Phase 3.5 IO Cut Optimizer
+[11:47:52] Phase 3.6 Fast Optimization
+[11:48:22] Phase 3.7 Small Shape DP
+[11:48:22] Phase 3.7.1 Small Shape Clustering
+[11:49:23] Phase 3.7.2 Flow Legalize Slice Clusters
+[11:49:23] Phase 3.7.3 Slice Area Swap
+[11:50:23] Phase 3.8 Place Remaining
+[11:50:23] Phase 3.9 Re-assign LUT pins
+[11:50:54] Phase 3.10 Pipeline Register Optimization
+[11:50:54] Phase 3.11 Fast Optimization
+[11:52:24] Phase 4 Post Placement Optimization and Clean-Up
+[11:52:24] Phase 4.1 Post Commit Optimization
+[11:53:25] Phase 4.1.1 Post Placement Optimization
+[11:53:25] Phase 4.1.1.1 BUFG Insertion
+[11:53:25] Phase 1 Physical Synthesis Initialization
+[11:54:25] Phase 4.1.1.2 BUFG Replication
+[11:58:27] Phase 4.1.1.3 Replication
+[11:58:57] Phase 4.2 Post Placement Cleanup
+[11:59:58] Phase 4.3 Placer Reporting
+[11:59:58] Phase 4.4 Final Placement Cleanup
+[12:13:04] Finished 4th of 6 tasks (FPGA logic placement). Elapsed time: 00h 43m 18s 
+
+[12:13:04] Starting logic routing..
+[12:14:04] Phase 1 Build RT Design
+[12:15:05] Phase 2 Router Initialization
+[12:15:05] Phase 2.1 Create Timer
+[12:15:35] Phase 2.2 Fix Topology Constraints
+[12:15:35] Phase 2.3 Pre Route Cleanup
+[12:16:05] Phase 2.4 Global Clock Net Routing
+[12:16:05] Phase 2.5 Update Timing
+[12:18:36] Phase 2.6 Update Timing for Bus Skew
+[12:18:36] Phase 2.6.1 Update Timing
+[12:19:37] Phase 3 Initial Routing
+[12:19:37] Phase 3.1 Global Routing
+[12:19:37] Phase 3.2 Global Routing
+[12:21:08] Phase 4 Rip-up And Reroute
+[12:21:08] Phase 4.1 Global Iteration 0
+[12:30:42] Phase 4.2 Global Iteration 1
+[12:32:43] Phase 4.3 Global Iteration 2
+[12:34:14] Phase 4.4 Global Iteration 3
+[12:36:15] Phase 4.5 Global Iteration 4
+[12:38:16] Phase 4.6 Global Iteration 5
+[12:40:17] Phase 5 Delay and Skew Optimization
+[12:40:17] Phase 5.1 Delay CleanUp
+[12:40:17] Phase 5.1.1 Update Timing
+[12:41:17] Phase 5.1.2 Update Timing
+[12:41:47] Phase 5.2 Clock Skew Optimization
+[12:42:17] Phase 6 Post Hold Fix
+[12:42:17] Phase 6.1 Hold Fix Iter
+[12:42:17] Phase 6.1.1 Update Timing
+[12:43:48] Phase 7 Leaf Clock Prog Delay Opt
+[12:45:19] Phase 7.1 Delay CleanUp
+[12:45:19] Phase 7.1.1 Update Timing
+[12:46:19] Phase 7.1.2 Update Timing
+[12:46:50] Phase 7.2 Hold Fix Iter
+[12:46:50] Phase 7.2.1 Update Timing
+[12:48:51] Phase 7.3 Global Iteration for Hold
+[12:48:51] Phase 7.3.1 Update Timing
+[12:50:21] Phase 8 Route finalize
+[12:50:51] Phase 9 Verifying routed nets
+[12:50:51] Phase 10 Depositing Routes
+[12:51:22] Phase 11 Post Router Timing
+[12:51:52] Phase 12 Physical Synthesis in Router
+[12:51:52] Phase 12.1 Physical Synthesis Initialization
+[12:53:23] Phase 12.2 Critical Path Optimization
+[12:53:53] Finished 5th of 6 tasks (FPGA routing). Elapsed time: 00h 40m 49s 
+
+[12:53:53] Starting bitstream generation..
+[13:01:26] Creating bitmap...
+[13:10:31] Writing bitstream ./pfm_top_i_dynamic_region_my_rm_partial.bit...
+[13:10:31] Finished 6th of 6 tasks (FPGA bitstream generation). Elapsed time: 00h 16m 38s 
+[13:10:35] Run vpl: Step impl: Completed
+[13:10:36] Run vpl: FINISHED. Run Status: impl Complete!
+INFO: [v++ 60-1441] [13:10:36] Run run_link: Step vpl: Completed
+Time (s): cpu = 00:00:55 ; elapsed = 02:22:56 . Memory (MB): peak = 1329.262 ; gain = 0.000 ; free physical = 37231 ; free virtual = 84304
+INFO: [v++ 60-1443] [13:10:36] Run run_link: Step rtdgen: Started
+INFO: [v++ 60-1453] Command Line: rtdgen
+INFO: [v++ 60-1454] Run Directory: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link
+INFO: [v++ 60-991] clock name 'clkwiz_kernel_clk_out1' (clock ID '0') is being mapped to clock name 'DATA_CLK' in the xclbin
+INFO: [v++ 60-991] clock name 'clkwiz_kernel2_clk_out1' (clock ID '1') is being mapped to clock name 'KERNEL_CLK' in the xclbin
+INFO: [v++ 60-1230] The compiler selected the following frequencies for the runtime controllable kernel clock(s) and scalable system clock(s): Kernel (DATA) clock: clkwiz_kernel_clk_out1 = 181, Kernel (KERNEL) clock: clkwiz_kernel2_clk_out1 = 500
+INFO: [v++ 60-1453] Command Line: cf2sw -a /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/address_map.xml -sdsl /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/sdsl.dat -xclbin /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xclbin_orig.xml -rtd /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.rtd -o /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.xml
+INFO: [v++ 60-1652] Cf2sw returned exit code: 0
+INFO: [v++ 60-2311] HPISystemDiagram::writeSystemDiagramAfterRunningVivado, rtdInputFilePath: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.rtd
+INFO: [v++ 60-2312] HPISystemDiagram::writeSystemDiagramAfterRunningVivado, systemDiagramOutputFilePath: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/systemDiagramModelSlrBaseAddress.json
+INFO: [v++ 60-1618] Launching 
+INFO: [v++ 60-1441] [13:10:37] Run run_link: Step rtdgen: Completed
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:01 . Memory (MB): peak = 1329.262 ; gain = 0.000 ; free physical = 37237 ; free virtual = 84310
+INFO: [v++ 60-1443] [13:10:37] Run run_link: Step xclbinutil: Started
+INFO: [v++ 60-1453] Command Line: xclbinutil --add-section DEBUG_IP_LAYOUT:JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/debug_ip_layout.rtd --add-section BITSTREAM:RAW:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/partial.bit --force --target hw --key-value SYS:dfx_enable:true --add-section :JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.rtd --append-section :JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/appendSection.rtd --add-section CLOCK_FREQ_TOPOLOGY:JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel_xml.rtd --add-section BUILD_METADATA:JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel_build.rtd --add-section EMBEDDED_METADATA:RAW:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.xml --add-section SYSTEM_METADATA:RAW:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/systemDiagramModelSlrBaseAddress.json --output /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin
+INFO: [v++ 60-1454] Run Directory: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link
+XRT Build Version: 2.6.0 (Vitis)
+       Build Date: 2020-05-07 15:30:09
+          Hash ID: 9d35aca9e6be09a5402ec036a5607d26e74e01cc
+Creating a default 'in-memory' xclbin image.
+
+Section: 'DEBUG_IP_LAYOUT'(9) was successfully added.
+Size   : 296 bytes
+Format : JSON
+File   : '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/debug_ip_layout.rtd'
+
+Section: 'BITSTREAM'(0) was successfully added.
+Size   : 63499847 bytes
+Format : RAW
+File   : '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/partial.bit'
+
+Section: 'MEM_TOPOLOGY'(6) was successfully added.
+Format : JSON
+File   : 'mem_topology'
+
+Section: 'IP_LAYOUT'(8) was successfully added.
+Format : JSON
+File   : 'ip_layout'
+
+Section: 'CONNECTIVITY'(7) was successfully added.
+Format : JSON
+File   : 'connectivity'
+
+Section: 'CLOCK_FREQ_TOPOLOGY'(11) was successfully added.
+Size   : 274 bytes
+Format : JSON
+File   : '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel_xml.rtd'
+
+Section: 'BUILD_METADATA'(14) was successfully added.
+Size   : 2898 bytes
+Format : JSON
+File   : '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel_build.rtd'
+
+Section: 'EMBEDDED_METADATA'(2) was successfully added.
+Size   : 3140 bytes
+Format : RAW
+File   : '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.xml'
+
+Section: 'SYSTEM_METADATA'(22) was successfully added.
+Size   : 7007 bytes
+Format : RAW
+File   : '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/systemDiagramModelSlrBaseAddress.json'
+
+Section: 'IP_LAYOUT'(8) was successfully appended to.
+Format : JSON
+File   : 'ip_layout'
+Successfully wrote (63521908 bytes) to the output file: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin
+Leaving xclbinutil.
+INFO: [v++ 60-1441] [13:10:37] Run run_link: Step xclbinutil: Completed
+Time (s): cpu = 00:00:00.19 ; elapsed = 00:00:00.28 . Memory (MB): peak = 1329.262 ; gain = 0.000 ; free physical = 37177 ; free virtual = 84310
+INFO: [v++ 60-1443] [13:10:37] Run run_link: Step xclbinutilinfo: Started
+INFO: [v++ 60-1453] Command Line: xclbinutil --quiet --force --info /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin.info --input /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin
+INFO: [v++ 60-1454] Run Directory: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link
+INFO: [v++ 60-1441] [13:10:38] Run run_link: Step xclbinutilinfo: Completed
+Time (s): cpu = 00:00:00.55 ; elapsed = 00:00:00.61 . Memory (MB): peak = 1329.262 ; gain = 0.000 ; free physical = 37177 ; free virtual = 84310
+INFO: [v++ 60-1443] [13:10:38] Run run_link: Step generate_sc_driver: Started
+INFO: [v++ 60-1453] Command Line: 
+INFO: [v++ 60-1454] Run Directory: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link
+INFO: [v++ 60-1441] [13:10:38] Run run_link: Step generate_sc_driver: Completed
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1329.262 ; gain = 0.000 ; free physical = 37177 ; free virtual = 84310
+INFO: [v++ 60-244] Generating system estimate report...
+INFO: [v++ 60-1092] Generated system estimate report: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/system_estimate_myproject_kernel.xtxt
+INFO: [v++ 60-586] Created /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.ltx
+INFO: [v++ 60-586] Created myproject_kernel.xclbin
+INFO: [v++ 60-1307] Run completed. Additional information can be found in:
+	Guidance: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/v++_link_myproject_kernel_guidance.html
+	Timing Report: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/imp/xilinx_u250_xdma_201830_2_bb_locked_timing_summary_routed.rpt
+	Utilizations Report: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/imp/kernel_util_routed.rpt
+	Vivado Log: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/logs/link/vivado.log
+	Steps Log File: /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/logs/link/link.steps.log
+
+INFO: [v++ 60-2343] Use the vitis_analyzer tool to visualize and navigate the relevant reports. Run the following command. 
+    vitis_analyzer /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin.link_summary 
+INFO: [v++ 60-791] Total elapsed time: 2h 23m 25s

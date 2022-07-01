@@ -1,0 +1,846 @@
+<ENTRY>
+{
+ "thisFile": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin.link_summary",
+ "connectId": "",
+ "serverToken": "",
+ "timestamp": "0"
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_CmdStep",
+ "dateTimestamp": "Wed Jun 29 10:47:13 2022",
+ "timestampMillis": "1656514033374",
+ "buildStep": {
+  "cmdId": "db531883-3ca8-4473-ac42-d38b631a96d5",
+  "name": "v++",
+  "logFile": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/link.steps.log",
+  "commandLine": "/home/ferroelectric/Xilinx_2020/Vitis/2020.1/bin/unwrapped/lnx64.o/v++  --xp \"vivado_prop:run.__KERNEL__.{STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS}={-directive sdx_optimization_effort_high}\" --xp \"misc:report=type report_timing_summary name impl_report_timing_summary_route_design_summary steps {route_design} runs {impl_1} options {-max_paths 10}\" --xp \"misc:report=type report_timing_summary name impl_report_timing_summary_post_route_phys_opt_design_summary steps {post_route_phys_opt_design} runs {impl_1} options {-max_paths 10}\" -t hw --platform xilinx_u250_xdma_201830_2 --link ../xo_files/myproject_kernel.xo -omyproject_kernel.xclbin --user_ip_repo_paths /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/impl/ip ",
+  "args": [
+   "-t",
+   "hw",
+   "--platform",
+   "xilinx_u250_xdma_201830_2",
+   "--link",
+   "../xo_files/myproject_kernel.xo",
+   "-omyproject_kernel.xclbin",
+   "--user_ip_repo_paths",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/impl/ip"
+  ],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 10:47:13 2022",
+ "timestampMillis": "1656514033374",
+ "status": {
+  "cmdId": "db531883-3ca8-4473-ac42-d38b631a96d5",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_FlowMetaData",
+ "dateTimestamp": "Wed Jun 29 10:47:30 2022",
+ "timestampMillis": "1656514050181",
+ "buildSummary": {
+  "hardwarePlatform": "xilinx_u250_xdma_201830_2.xpfm",
+  "hardwareDsa": "xilinx_u250_xdma_201830_2.dsa",
+  "platformDirectory": "/opt/xilinx/platforms/xilinx_u250_xdma_201830_2",
+  "runtime": "OpenCL",
+  "systemConfig": "Linux",
+  "flow": "BF_LINK",
+  "target": "TT_HW",
+  "binaryContainer": {
+   "base": {
+    "type": "BT_UKNOWN",
+    "name": "myproject_kernel",
+    "file": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin",
+    "reports": []
+   },
+   "kernels": []
+  },
+  "kernels": [
+   {
+    "base": {
+     "type": "KERNEL",
+     "name": "krnl_rtl",
+     "file": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xo_files/myproject_kernel.xo",
+     "reports": []
+    },
+    "sources": [],
+    "psSources": [],
+    "cuNames": [
+     "krnl_rtl_1"
+    ],
+    "type": "RTL"
+   }
+  ],
+  "toolVersion": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Jun 29 10:47:30 2022",
+ "timestampMillis": "1656514050264",
+ "buildStep": {
+  "cmdId": "168f0027-d4f5-4d96-9f02-8f11c934671a",
+  "name": "system_link",
+  "logFile": "",
+  "commandLine": "system_link --xo /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xo_files/myproject_kernel.xo --xpfm /opt/xilinx/platforms/xilinx_u250_xdma_201830_2/xilinx_u250_xdma_201830_2.xpfm --target hw --output_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int --temp_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link",
+  "args": [
+   "--xo",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xo_files/myproject_kernel.xo",
+   "--xpfm",
+   "/opt/xilinx/platforms/xilinx_u250_xdma_201830_2/xilinx_u250_xdma_201830_2.xpfm",
+   "--target",
+   "hw",
+   "--output_dir",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int",
+   "--temp_dir",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/sys_link"
+  ],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 10:47:30 2022",
+ "timestampMillis": "1656514050265",
+ "status": {
+  "cmdId": "168f0027-d4f5-4d96-9f02-8f11c934671a",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 10:47:38 2022",
+ "timestampMillis": "1656514058345",
+ "status": {
+  "cmdId": "168f0027-d4f5-4d96-9f02-8f11c934671a",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Jun 29 10:47:38 2022",
+ "timestampMillis": "1656514058346",
+ "buildStep": {
+  "cmdId": "428c9efa-0222-4b45-a8b4-56baff4f6ca1",
+  "name": "cf2sw",
+  "logFile": "",
+  "commandLine": "cf2sw -sdsl /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/sdsl.dat -rtd /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/cf2sw.rtd -xclbin /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xclbin_orig.xml -o /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xclbin_orig.1.xml",
+  "args": [
+   "-sdsl",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/sdsl.dat",
+   "-rtd",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/cf2sw.rtd",
+   "-xclbin",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xclbin_orig.xml",
+   "-o",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xclbin_orig.1.xml"
+  ],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 10:47:38 2022",
+ "timestampMillis": "1656514058347",
+ "status": {
+  "cmdId": "428c9efa-0222-4b45-a8b4-56baff4f6ca1",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 10:47:39 2022",
+ "timestampMillis": "1656514059384",
+ "status": {
+  "cmdId": "428c9efa-0222-4b45-a8b4-56baff4f6ca1",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Jun 29 10:47:39 2022",
+ "timestampMillis": "1656514059386",
+ "buildStep": {
+  "cmdId": "a33df7df-83cd-4a22-96ee-951218ba7532",
+  "name": "rtd2_system_diagram",
+  "logFile": "",
+  "commandLine": "rtd2SystemDiagram",
+  "args": [],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 10:47:39 2022",
+ "timestampMillis": "1656514059387",
+ "status": {
+  "cmdId": "a33df7df-83cd-4a22-96ee-951218ba7532",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 10:47:40 2022",
+ "timestampMillis": "1656514060147",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/systemDiagramModel.json",
+  "name": "",
+  "fileType": "JSON",
+  "reportType": "SYSTEM_DIAGRAM"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 10:47:40 2022",
+ "timestampMillis": "1656514060148",
+ "status": {
+  "cmdId": "a33df7df-83cd-4a22-96ee-951218ba7532",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Jun 29 10:47:40 2022",
+ "timestampMillis": "1656514060149",
+ "buildStep": {
+  "cmdId": "2d921fcf-e30e-40e2-91a1-8f14ed747bad",
+  "name": "vpl",
+  "logFile": "",
+  "commandLine": "vpl -t hw -f xilinx_u250_xdma_201830_2 --remote_ip_cache /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/.ipcache --user_ip_repo_paths /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/impl/ip --output_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int --log_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/logs/link --report_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link --config /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/vplConfig.ini -k /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/kernel_info.dat --webtalk_flag Vitis --temp_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link --no-info --iprepo /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xo/ip_repo/fastmachinelearning_org_hls4ml_krnl_rtl_1_0 --messageDb /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link/vpl.pb /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/dr.bd.tcl",
+  "args": [
+   "-t",
+   "hw",
+   "-f",
+   "xilinx_u250_xdma_201830_2",
+   "--remote_ip_cache",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/.ipcache",
+   "--user_ip_repo_paths",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/impl/ip",
+   "--output_dir",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int",
+   "--log_dir",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/logs/link",
+   "--report_dir",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link",
+   "--config",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/vplConfig.ini",
+   "-k",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/kernel_info.dat",
+   "--webtalk_flag",
+   "Vitis",
+   "--temp_dir",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link",
+   "--no-info",
+   "--iprepo",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xo/ip_repo/fastmachinelearning_org_hls4ml_krnl_rtl_1_0",
+   "--messageDb",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link/vpl.pb",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/dr.bd.tcl"
+  ],
+  "iniFiles": [
+   {
+    "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/vplConfig.ini",
+    "content": "[advanced]\nmisc=report=type report_timing_summary name impl_report_timing_summary_route_design_summary steps {route_design} runs {impl_1} options {-max_paths 10}\nmisc=report=type report_timing_summary name impl_report_timing_summary_post_route_phys_opt_design_summary steps {post_route_phys_opt_design} runs {impl_1} options {-max_paths 10}\nparam=compiler.enablePerformanceTrace=1\nparam=compiler.vppCurrentWorkingDir=/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files\nmisc=BinaryName=myproject_kernel\n\n[connectivity]\nnk=krnl_rtl:1:krnl_rtl_1\n\n[vivado]\nprop=run.__KERNEL__.{STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS}={-directive sdx_optimization_effort_high}\n\n"
+   }
+  ],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 10:47:40 2022",
+ "timestampMillis": "1656514060149",
+ "status": {
+  "cmdId": "2d921fcf-e30e-40e2-91a1-8f14ed747bad",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_CmdStep",
+ "dateTimestamp": "Wed Jun 29 10:47:41 2022",
+ "timestampMillis": "1656514061683",
+ "buildStep": {
+  "cmdId": "678d5fe6-c53b-4e99-988d-5478bdbdecbb",
+  "name": "vpl",
+  "logFile": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/link.steps.log",
+  "commandLine": "/home/ferroelectric/Xilinx_2020/Vitis/2020.1/bin/unwrapped/lnx64.o/vpl -t hw -f xilinx_u250_xdma_201830_2 --remote_ip_cache /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/.ipcache --user_ip_repo_paths /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/impl/ip --output_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int --log_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/logs/link --report_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link --config /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/vplConfig.ini -k /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/kernel_info.dat --webtalk_flag Vitis --temp_dir /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link --no-info --iprepo /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xo/ip_repo/fastmachinelearning_org_hls4ml_krnl_rtl_1_0 --messageDb /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link/vpl.pb /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/dr.bd.tcl ",
+  "args": [],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 10:47:41 2022",
+ "timestampMillis": "1656514061683",
+ "status": {
+  "cmdId": "678d5fe6-c53b-4e99-988d-5478bdbdecbb",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_VivadoProject",
+ "dateTimestamp": "Wed Jun 29 10:47:52 2022",
+ "timestampMillis": "1656514072462",
+ "vivadoProject": {
+  "openDir": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl",
+  "openScript": "openprj.tcl",
+  "relativeProject": "prj/prj.xpr"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Jun 29 10:47:52 2022",
+ "timestampMillis": "1656514072463",
+ "buildStep": {
+  "cmdId": "59aa7ead-76d0-465a-ad06-80d7f82a1722",
+  "name": "vivado",
+  "logFile": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/vivado.log",
+  "commandLine": "vivado -log vivado.log -applog -m64 -messageDb vivado.pb -mode batch -source vpl.tcl -notrace",
+  "args": [
+   "-log",
+   "vivado.log",
+   "-applog",
+   " -m64",
+   "-messageDb",
+   "vivado.pb",
+   "-mode",
+   "batch",
+   "-source",
+   "vpl.tcl",
+   "-notrace"
+  ],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/run_link"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 10:47:52 2022",
+ "timestampMillis": "1656514072463",
+ "status": {
+  "cmdId": "59aa7ead-76d0-465a-ad06-80d7f82a1722",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636193",
+ "status": {
+  "cmdId": "59aa7ead-76d0-465a-ad06-80d7f82a1722",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636215",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/imp/kernel_util_routed.xutil",
+  "name": "",
+  "fileType": "XUTIL",
+  "reportType": "GLOBAL_UTILIZATION_ROUTE"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636215",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/imp/kernel_util_routed.rpt",
+  "name": "",
+  "fileType": "TEXT",
+  "reportType": "GLOBAL_UTILIZATION_ROUTE"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636216",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/imp/kernel_util_placed.xutil",
+  "name": "",
+  "fileType": "XUTIL",
+  "reportType": "GLOBAL_UTILIZATION_PLACEMENT"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636216",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/imp/kernel_util_placed.rpt",
+  "name": "",
+  "fileType": "TEXT",
+  "reportType": "GLOBAL_UTILIZATION_PLACEMENT"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636216",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/imp/kernel_util_synthed.xutil",
+  "name": "",
+  "fileType": "XUTIL",
+  "reportType": "GLOBAL_UTILIZATION_SYNTHESIS"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636254",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/imp/xilinx_u250_xdma_201830_2_bb_locked_timing_summary_routed.rpt",
+  "name": "",
+  "fileType": "TEXT",
+  "reportType": "GLOBAL_REPORT_TIMING_SUMMARY"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636610",
+ "status": {
+  "cmdId": "678d5fe6-c53b-4e99-988d-5478bdbdecbb",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636627",
+ "status": {
+  "cmdId": "2d921fcf-e30e-40e2-91a1-8f14ed747bad",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636627",
+ "buildStep": {
+  "cmdId": "bdf4e1b7-b69e-4d80-97df-bb1526c11bd4",
+  "name": "rtdgen",
+  "logFile": "",
+  "commandLine": "rtdgen",
+  "args": [],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636628",
+ "status": {
+  "cmdId": "bdf4e1b7-b69e-4d80-97df-bb1526c11bd4",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636629",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel_xml.rtd",
+  "name": "",
+  "fileType": "JSON",
+  "reportType": "XCLBIN_INFO"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636630",
+ "buildStep": {
+  "cmdId": "ce9e37f0-493d-4e0f-9b15-6051e0b26452",
+  "name": "cf2sw",
+  "logFile": "",
+  "commandLine": "cf2sw -a /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/address_map.xml -sdsl /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/sdsl.dat -xclbin /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xclbin_orig.xml -rtd /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.rtd -o /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.xml",
+  "args": [
+   "-a",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/address_map.xml",
+   "-sdsl",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/sdsl.dat",
+   "-xclbin",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/xclbin_orig.xml",
+   "-rtd",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.rtd",
+   "-o",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.xml"
+  ],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:36 2022",
+ "timestampMillis": "1656522636630",
+ "status": {
+  "cmdId": "ce9e37f0-493d-4e0f-9b15-6051e0b26452",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:37 2022",
+ "timestampMillis": "1656522637686",
+ "status": {
+  "cmdId": "ce9e37f0-493d-4e0f-9b15-6051e0b26452",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:37 2022",
+ "timestampMillis": "1656522637689",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/systemDiagramModelSlrBaseAddress.json",
+  "name": "",
+  "fileType": "JSON",
+  "reportType": "SYSTEM_DIAGRAM_PLUS"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Jun 29 13:10:37 2022",
+ "timestampMillis": "1656522637689",
+ "buildStep": {
+  "cmdId": "1fa8ae6c-074d-4d7f-a0af-7d114dadf8ff",
+  "name": "rtdgen",
+  "logFile": "",
+  "commandLine": "writeSystemDiagram",
+  "args": [
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.rtd",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/systemDiagramModelSlrBaseAddress.json"
+  ],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:37 2022",
+ "timestampMillis": "1656522637690",
+ "status": {
+  "cmdId": "1fa8ae6c-074d-4d7f-a0af-7d114dadf8ff",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:37 2022",
+ "timestampMillis": "1656522637690",
+ "status": {
+  "cmdId": "1fa8ae6c-074d-4d7f-a0af-7d114dadf8ff",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:37 2022",
+ "timestampMillis": "1656522637690",
+ "status": {
+  "cmdId": "bdf4e1b7-b69e-4d80-97df-bb1526c11bd4",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Jun 29 13:10:37 2022",
+ "timestampMillis": "1656522637691",
+ "buildStep": {
+  "cmdId": "03866d01-b63f-45cf-8a55-e9970a35c88d",
+  "name": "xclbinutil",
+  "logFile": "",
+  "commandLine": "xclbinutil --add-section DEBUG_IP_LAYOUT:JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/debug_ip_layout.rtd --add-section BITSTREAM:RAW:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/partial.bit --force --target hw --key-value SYS:dfx_enable:true --add-section :JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.rtd --append-section :JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/appendSection.rtd --add-section CLOCK_FREQ_TOPOLOGY:JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel_xml.rtd --add-section BUILD_METADATA:JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel_build.rtd --add-section EMBEDDED_METADATA:RAW:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.xml --add-section SYSTEM_METADATA:RAW:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/systemDiagramModelSlrBaseAddress.json --output /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin",
+  "args": [
+   "--add-section",
+   "DEBUG_IP_LAYOUT:JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/debug_ip_layout.rtd",
+   "--add-section",
+   "BITSTREAM:RAW:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/partial.bit",
+   "--force",
+   "--target",
+   "hw",
+   "--key-value",
+   "SYS:dfx_enable:true",
+   "--add-section",
+   ":JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.rtd",
+   "--append-section",
+   ":JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/appendSection.rtd",
+   "--add-section",
+   "CLOCK_FREQ_TOPOLOGY:JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel_xml.rtd",
+   "--add-section",
+   "BUILD_METADATA:JSON:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel_build.rtd",
+   "--add-section",
+   "EMBEDDED_METADATA:RAW:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/myproject_kernel.xml",
+   "--add-section",
+   "SYSTEM_METADATA:RAW:/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/int/systemDiagramModelSlrBaseAddress.json",
+   "--output",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin"
+  ],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:37 2022",
+ "timestampMillis": "1656522637692",
+ "status": {
+  "cmdId": "03866d01-b63f-45cf-8a55-e9970a35c88d",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:37 2022",
+ "timestampMillis": "1656522637977",
+ "status": {
+  "cmdId": "03866d01-b63f-45cf-8a55-e9970a35c88d",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Jun 29 13:10:37 2022",
+ "timestampMillis": "1656522637978",
+ "buildStep": {
+  "cmdId": "a277551a-8cd8-4c6a-b359-8d7166070f9c",
+  "name": "xclbinutilinfo",
+  "logFile": "",
+  "commandLine": "xclbinutil --quiet --force --info /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin.info --input /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin",
+  "args": [
+   "--quiet",
+   "--force",
+   "--info",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin.info",
+   "--input",
+   "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/myproject_kernel.xclbin"
+  ],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:37 2022",
+ "timestampMillis": "1656522637979",
+ "status": {
+  "cmdId": "a277551a-8cd8-4c6a-b359-8d7166070f9c",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:38 2022",
+ "timestampMillis": "1656522638586",
+ "status": {
+  "cmdId": "a277551a-8cd8-4c6a-b359-8d7166070f9c",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Jun 29 13:10:38 2022",
+ "timestampMillis": "1656522638587",
+ "buildStep": {
+  "cmdId": "a0be16b2-2c20-4210-aa5b-a131171c3c13",
+  "name": "generate_sc_driver",
+  "logFile": "",
+  "commandLine": "",
+  "args": [],
+  "iniFiles": [],
+  "cwd": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:38 2022",
+ "timestampMillis": "1656522638588",
+ "status": {
+  "cmdId": "a0be16b2-2c20-4210-aa5b-a131171c3c13",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:38 2022",
+ "timestampMillis": "1656522638588",
+ "status": {
+  "cmdId": "a0be16b2-2c20-4210-aa5b-a131171c3c13",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:38 2022",
+ "timestampMillis": "1656522638590",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/system_estimate_myproject_kernel.xtxt",
+  "name": "",
+  "fileType": "TEXT",
+  "reportType": "GLOBAL_SYSTEM_ESTIMATE"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:38 2022",
+ "timestampMillis": "1656522638989",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/reports/link/v++_link_myproject_kernel_guidance.html",
+  "name": "",
+  "fileType": "HTML",
+  "reportType": "GLOBAL_RULECHECK_GUIDANCE"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:38 2022",
+ "timestampMillis": "1656522638989",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/v++_link_myproject_kernel_guidance.pb",
+  "name": "",
+  "fileType": "BINARY_PROTOBUF",
+  "reportType": "GLOBAL_RULECHECK_GUIDANCE"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Jun 29 13:10:38 2022",
+ "timestampMillis": "1656522638992",
+ "report": {
+  "path": "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/logs/optraceViewer.html",
+  "name": "",
+  "fileType": "HTML",
+  "reportType": "OPERATION_TRACE"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Jun 29 13:10:38 2022",
+ "timestampMillis": "1656522638992",
+ "status": {
+  "cmdId": "db531883-3ca8-4473-ac42-d38b631a96d5",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>

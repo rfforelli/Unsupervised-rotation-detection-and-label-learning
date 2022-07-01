@@ -1,0 +1,358 @@
+INFO: [XSIM 43-3496] Using init file passed via -initfile option "/home/ferroelectric/Xilinx_2020/Vivado/2020.1/data/xsim/ip/xsim_ip.ini".
+Vivado Simulator 2020.1
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: /home/ferroelectric/Xilinx_2020/Vivado/2020.1/bin/unwrapped/lnx64.o/xelab xil_defaultlib.apatb_myproject_axi_top glbl -prj myproject_axi.prj -L smartconnect_v1_0 -L axi_protocol_checker_v1_1_12 -L axi_protocol_checker_v1_1_13 -L axis_protocol_checker_v1_1_11 -L axis_protocol_checker_v1_1_12 -L xil_defaultlib -L unisims_ver -L xpm --initfile /home/ferroelectric/Xilinx_2020/Vivado/2020.1/data/xsim/ip/xsim_ip.ini --lib ieee_proposed=./ieee_proposed -s myproject_axi -debug wave 
+Multi-threading is on. Using 46 slave threads.
+Determining compilation order of HDL files.
+WARNING: [XSIM 43-3431] One or more environment variables have been detected which affect the operation of the C compiler. These are typically not set in standard installations and are not tested by Xilinx, however they may be appropriate for your system, so the flow will attempt to continue.  If errors occur, try running xelab with the "-mt off -v 1" switches to see more information from the C compiler. The following environment variables have been detected:
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/glbl.v" into library work
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/fifo_w16_d2_A.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo_w16_d2_A_shiftReg
+INFO: [VRFC 10-311] analyzing module fifo_w16_d2_A
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_relu_array_array_ap_ufixed_64u_relu_config7_U0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_relu_array_array_ap_ufixed_64u_relu_config7_U0_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_relu_array_array_ap_ufixed_64u_relu_config7_U0
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mul_mul_16s_12s_21_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_16s_12s_21_1_1_DSP48_0
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_16s_12s_21_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/Loop_2_proc.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Loop_2_proc
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mux_164_12_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mux_164_12_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mul_mul_12ns_7s_19_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_12ns_7s_19_1_1_DSP48_5
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_12ns_7s_19_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_dense_array_array_ap_fixed_16_6_5_3_0_6u_configlbW.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_dense_array_array_ap_fixed_16_6_5_3_0_6u_configlbW_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_dense_array_array_ap_fixed_16_6_5_3_0_6u_configlbW
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config16_s_oug8j.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config16_s_oug8j_rom
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config16_s_oug8j
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi.autotb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module apatb_myproject_axi_top
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/relu_array_array_ap_ufixed_32u_relu_config11_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module relu_array_array_ap_ufixed_32u_relu_config11_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config12_s_oueOg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config12_s_oueOg_rom
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config12_s_oueOg
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/fifo_w16_d1_A.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo_w16_d1_A_shiftReg
+INFO: [VRFC 10-311] analyzing module fifo_w16_d1_A
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config12_s_w1fYi.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config12_s_w1fYi_rom
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config12_s_w1fYi
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mux_325_12_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mux_325_12_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mul_mul_16s_7s_21_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_16s_7s_21_1_1_DSP48_1
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_16s_7s_21_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_array_array_ap_fixed_16_6_5_3_0_32u_config8_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_array_array_ap_fixed_16_6_5_3_0_32u_config8_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config16_s_w1hbi.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config16_s_w1hbi_rom
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config16_s_w1hbi
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/fifo_w16_d1_A_x.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo_w16_d1_A_x_shiftReg
+INFO: [VRFC 10-311] analyzing module fifo_w16_d1_A_x
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/normalize_array_array_ap_fixed_32u_config10_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module normalize_array_array_ap_fixed_32u_config10_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/Loop_1_proc326.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Loop_1_proc326
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/Block_myproject_axi_exit31_proc.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Block_myproject_axi_exit31_proc
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/fifo_w12_d1_A.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo_w12_d1_A_shiftReg
+INFO: [VRFC 10-311] analyzing module fifo_w12_d1_A
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mux_63_16_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mux_63_16_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/fifo_w16_d900_A.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo_w16_d900_A
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_wrapper_ap_fixed_ap_fixed_16_6_5_3_0_config4_s_w4_V.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_fixed_ap_fixed_16_6_5_3_0_config4_s_w4_V_rom
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_fixed_ap_fixed_16_6_5_3_0_config4_s_w4_V
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_normalize_array_array_ap_fixed_32u_config10_U0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_normalize_array_array_ap_fixed_32u_config10_U0_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_normalize_array_array_ap_fixed_32u_config10_U0
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/normalize_array_array_ap_fixed_64u_config6_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module normalize_array_array_ap_fixed_64u_config6_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/AESL_deadlock_detection_unit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module AESL_deadlock_detect_unit
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_dense_array_array_ap_fixed_16_6_5_3_0_32u_confijbC.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_dense_array_array_ap_fixed_16_6_5_3_0_32u_confijbC_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_dense_array_array_ap_fixed_16_6_5_3_0_32u_confijbC
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config8_s_w8_V.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config8_s_w8_V_rom
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config8_s_w8_V
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_relu_array_array_ap_ufixed_16u_relu_config15_U0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_relu_array_array_ap_ufixed_16u_relu_config15_U0_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_relu_array_array_ap_ufixed_16u_relu_config15_U0
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config12_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config12_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_wrapper_ap_fixed_ap_fixed_16_6_5_3_0_config4_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_fixed_ap_fixed_16_6_5_3_0_config4_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mux_83_16_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mux_83_16_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/shift_line_buffer_array_ap_fixed_1u_config2_s_line_bufferbkb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module shift_line_buffer_array_ap_fixed_1u_config2_s_line_bufferbkb_core
+INFO: [VRFC 10-311] analyzing module shift_line_buffer_array_ap_fixed_1u_config2_s_line_bufferbkb
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/AESL_axi_s_in_r.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module AESL_axi_s_in_r
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_Block_myproject_axi_exit31_proc_U0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_Block_myproject_axi_exit31_proc_U0_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_Block_myproject_axi_exit31_proc_U0
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/AESL_fifo.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mul_mul_12ns_12s_24_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_12ns_12s_24_1_1_DSP48_4
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_12ns_12s_24_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mul_mul_12s_12ns_20_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_12s_12ns_20_1_1_DSP48_2
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_12s_12ns_20_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_array_array_ap_fixed_16_6_5_3_0_16u_config12_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_array_array_ap_fixed_16_6_5_3_0_16u_config12_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_normalize_array_array_ap_fixed_64u_config6_U0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_normalize_array_array_ap_fixed_64u_config6_U0_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_normalize_array_array_ap_fixed_64u_config6_U0
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_dense_array_array_ap_fixed_16_6_5_3_0_64u_confiibs.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_dense_array_array_ap_fixed_16_6_5_3_0_64u_confiibs_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_dense_array_array_ap_fixed_16_6_5_3_0_64u_confiibs
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/regslice_core.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module regslice_both
+INFO: [VRFC 10-311] analyzing module regslice_forward
+INFO: [VRFC 10-311] analyzing module regslice_reverse
+INFO: [VRFC 10-311] analyzing module regslice_both_w1
+INFO: [VRFC 10-311] analyzing module regslice_forward_w1
+INFO: [VRFC 10-311] analyzing module regslice_reverse_w1
+INFO: [VRFC 10-311] analyzing module ibuf
+INFO: [VRFC 10-311] analyzing module obuf
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_fpext_32ns_64_2_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_fpext_32ns_64_2_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config16_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config16_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_normalize_array_array_ap_fixed_16u_config14_U0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_normalize_array_array_ap_fixed_16u_config14_U0_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_normalize_array_array_ap_fixed_16u_config14_U0
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_relu_array_array_ap_ufixed_32u_relu_config11_U0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_relu_array_array_ap_ufixed_32u_relu_config11_U0_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_relu_array_array_ap_ufixed_32u_relu_config11_U0
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/AESL_deadlock_detector.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module AESL_deadlock_detector
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/AESL_deadlock_report_unit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module AESL_deadlock_report_unit
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/relu_array_array_ap_ufixed_64u_relu_config7_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module relu_array_array_ap_ufixed_64u_relu_config7_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/AESL_axi_s_out_r.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module AESL_axi_s_out_r
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/fifo_w1_d2_A.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo_w1_d2_A_shiftReg
+INFO: [VRFC 10-311] analyzing module fifo_w1_d2_A
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_array_array_ap_fixed_16_6_5_3_0_64u_config4_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_array_array_ap_fixed_16_6_5_3_0_64u_config4_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_array_array_ap_fixed_16_6_5_3_0_6u_config16_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_array_array_ap_fixed_16_6_5_3_0_6u_config16_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/fifo_w16_d14400_A.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo_w16_d14400_A
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mux_646_16_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mux_646_16_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mul_mul_12ns_8s_20_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_12ns_8s_20_1_1_DSP48_3
+INFO: [VRFC 10-311] analyzing module myproject_axi_mul_mul_12ns_8s_20_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_dense_array_array_ap_fixed_16_6_5_3_0_16u_confikbM.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_dense_array_array_ap_fixed_16_6_5_3_0_16u_confikbM_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_dense_array_array_ap_fixed_16_6_5_3_0_16u_confikbM
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/relu_array_array_ap_ufixed_16u_relu_config15_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module relu_array_array_ap_ufixed_16u_relu_config15_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mux_646_12_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mux_646_12_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config8_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dense_wrapper_ap_ufixed_ap_fixed_16_6_5_3_0_config8_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/pooling2d_cl_array_array_ap_fixed_1u_config2_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pooling2d_cl_array_array_ap_fixed_1u_config2_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/shift_line_buffer_array_ap_fixed_1u_config2_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module shift_line_buffer_array_ap_fixed_1u_config2_s
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/start_for_myproject_U0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module start_for_myproject_U0_shiftReg
+INFO: [VRFC 10-311] analyzing module start_for_myproject_U0
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/myproject_axi_mux_42_16_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module myproject_axi_mux_42_16_1_1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/normalize_array_array_ap_fixed_16u_config14_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module normalize_array_array_ap_fixed_16u_config14_s
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/ip/xil_defaultlib/myproject_axi_ap_fpext_0_no_dsp_32.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'myproject_axi_ap_fpext_0_no_dsp_32'
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-3499] library name 'floating_point_v7_1_10' of instantiated unit conflicts with visible identifier [/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/verilog/ip/xil_defaultlib/myproject_axi_ap_fpext_0_no_dsp_32.vhd:191]
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package floating_point_v7_1_10.floating_point_v7_1_10_viv_comp
+Compiling package xbip_utils_v3_0_10.xbip_utils_v3_0_10_pkg
+Compiling package axi_utils_v2_0_6.axi_utils_v2_0_6_pkg
+Compiling package floating_point_v7_1_10.floating_point_v7_1_10_consts
+Compiling package ieee.math_real
+Compiling package floating_point_v7_1_10.floating_point_v7_1_10_exp_table...
+Compiling package mult_gen_v12_0_16.mult_gen_v12_0_16_pkg
+Compiling package ieee.std_logic_arith
+Compiling package ieee.std_logic_signed
+Compiling package floating_point_v7_1_10.floating_point_v7_1_10_pkg
+Compiling package floating_point_v7_1_10.flt_utils
+Compiling package unisim.vcomponents
+Compiling package xbip_pipe_v3_0_6.xbip_pipe_v3_0_6_viv_comp
+Compiling architecture synth of entity xbip_pipe_v3_0_6.xbip_pipe_v3_0_6_viv [\xbip_pipe_v3_0_6_viv(c_has_ce=1...]
+Compiling architecture rtl of entity floating_point_v7_1_10.delay [\delay(width=23,length=0)\]
+Compiling architecture synth of entity xbip_pipe_v3_0_6.xbip_pipe_v3_0_6_viv [\xbip_pipe_v3_0_6_viv(c_has_ce=1...]
+Compiling architecture rtl of entity floating_point_v7_1_10.delay [\delay(width=8,length=0)\]
+Compiling architecture muxcy_v of entity unisim.MUXCY [muxcy_default]
+Compiling architecture synth of entity xbip_pipe_v3_0_6.xbip_pipe_v3_0_6_viv [\xbip_pipe_v3_0_6_viv(c_has_ce=1...]
+Compiling architecture rtl of entity floating_point_v7_1_10.delay [\delay(width=4,length=0)\]
+Compiling architecture struct of entity floating_point_v7_1_10.carry_chain [\carry_chain(c_xdevicefamily="ki...]
+Compiling architecture synth of entity floating_point_v7_1_10.compare_eq_im [\compare_eq_im(c_xdevicefamily="...]
+Compiling architecture rtl of entity floating_point_v7_1_10.delay [\delay(length=0,fast_input=true)...]
+Compiling architecture rtl of entity floating_point_v7_1_10.special_detect [\special_detect(a_fw=24,op_delay...]
+Compiling architecture synth of entity xbip_pipe_v3_0_6.xbip_pipe_v3_0_6_viv [\xbip_pipe_v3_0_6_viv(c_has_ce=1...]
+Compiling architecture rtl of entity floating_point_v7_1_10.delay [\delay(length=0)\]
+Compiling architecture synth of entity xbip_pipe_v3_0_6.xbip_pipe_v3_0_6_viv [\xbip_pipe_v3_0_6_viv(c_has_ce=1...]
+Compiling architecture rtl of entity floating_point_v7_1_10.delay [\delay(width=2,length=0)\]
+Compiling architecture synth of entity xbip_pipe_v3_0_6.xbip_pipe_v3_0_6_viv [\xbip_pipe_v3_0_6_viv(c_has_ce=1...]
+Compiling architecture rtl of entity floating_point_v7_1_10.delay [\delay(width=4,length=0,fast_inp...]
+Compiling architecture rtl of entity floating_point_v7_1_10.flt_to_flt_conv_exp [\flt_to_flt_conv_exp(r_w=64,r_ew...]
+Compiling architecture synth of entity floating_point_v7_1_10.flt_dec_op [\flt_dec_op(c_xdevicefamily="vir...]
+Compiling architecture rtl of entity floating_point_v7_1_10.flt_to_flt_conv [\flt_to_flt_conv(c_xdevicefamily...]
+Compiling architecture synth of entity xbip_pipe_v3_0_6.xbip_pipe_v3_0_6_viv [\xbip_pipe_v3_0_6_viv(c_has_ce=1...]
+Compiling architecture synth of entity xbip_pipe_v3_0_6.xbip_pipe_v3_0_6_viv [\xbip_pipe_v3_0_6_viv(c_has_ce=1...]
+Compiling architecture rtl of entity floating_point_v7_1_10.delay [\delay(width=64,length=0)\]
+Compiling architecture xilinx of entity floating_point_v7_1_10.floating_point_v7_1_10_viv [\floating_point_v7_1_10_viv(c_xd...]
+Compiling architecture xilinx of entity floating_point_v7_1_10.floating_point_v7_1_10 [\floating_point_v7_1_10(c_xdevic...]
+Compiling architecture myproject_axi_ap_fpext_0_no_dsp_32_arch of entity xil_defaultlib.myproject_axi_ap_fpext_0_no_dsp_32 [myproject_axi_ap_fpext_0_no_dsp_...]
+Compiling module xil_defaultlib.myproject_axi_fpext_32ns_64_2_1
+Compiling module xil_defaultlib.ibuf(W=2)
+Compiling module xil_defaultlib.obuf(W=2)
+Compiling module xil_defaultlib.regslice_both(DataWidth=1)
+Compiling module xil_defaultlib.ibuf(W=33)
+Compiling module xil_defaultlib.obuf(W=33)
+Compiling module xil_defaultlib.regslice_both_default
+Compiling module xil_defaultlib.Loop_1_proc326
+Compiling module xil_defaultlib.shift_line_buffer_array_ap_fixed...
+Compiling module xil_defaultlib.shift_line_buffer_array_ap_fixed...
+Compiling module xil_defaultlib.shift_line_buffer_array_ap_fixed...
+Compiling module xil_defaultlib.pooling2d_cl_array_array_ap_fixe...
+Compiling module xil_defaultlib.dense_wrapper_ap_fixed_ap_fixed_...
+Compiling module xil_defaultlib.dense_wrapper_ap_fixed_ap_fixed_...
+Compiling module xil_defaultlib.myproject_axi_mux_646_16_1_1(ID=...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_16s_12s_21...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_16s_12s_21...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_16s_7s_21_...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_16s_7s_21_...
+Compiling module xil_defaultlib.dense_wrapper_ap_fixed_ap_fixed_...
+Compiling module xil_defaultlib.dense_array_array_ap_fixed_16_6_...
+Compiling module xil_defaultlib.normalize_array_array_ap_fixed_6...
+Compiling module xil_defaultlib.relu_array_array_ap_ufixed_64u_r...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.myproject_axi_mux_646_12_1_1(ID=...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_12s_12ns_2...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_12s_12ns_2...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_12ns_8s_20...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_12ns_8s_20...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.dense_array_array_ap_fixed_16_6_...
+Compiling module xil_defaultlib.normalize_array_array_ap_fixed_3...
+Compiling module xil_defaultlib.relu_array_array_ap_ufixed_32u_r...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.myproject_axi_mux_325_12_1_1(ID=...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_12ns_12s_2...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_12ns_12s_2...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.dense_array_array_ap_fixed_16_6_...
+Compiling module xil_defaultlib.normalize_array_array_ap_fixed_1...
+Compiling module xil_defaultlib.relu_array_array_ap_ufixed_16u_r...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.myproject_axi_mux_164_12_1_1(ID=...
+Compiling module xil_defaultlib.myproject_axi_mux_42_16_1_1(ID=1...
+Compiling module xil_defaultlib.myproject_axi_mux_83_16_1_1(ID=1...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_12ns_7s_19...
+Compiling module xil_defaultlib.myproject_axi_mul_mul_12ns_7s_19...
+Compiling module xil_defaultlib.dense_wrapper_ap_ufixed_ap_fixed...
+Compiling module xil_defaultlib.dense_array_array_ap_fixed_16_6_...
+Compiling module xil_defaultlib.fifo_w16_d900_A
+Compiling module xil_defaultlib.fifo_w16_d1_A_shiftReg
+Compiling module xil_defaultlib.fifo_w16_d1_A
+Compiling module xil_defaultlib.fifo_w12_d1_A_shiftReg
+Compiling module xil_defaultlib.fifo_w12_d1_A
+Compiling module xil_defaultlib.start_for_dense_array_array_ap_f...
+Compiling module xil_defaultlib.start_for_dense_array_array_ap_f...
+Compiling module xil_defaultlib.start_for_normalize_array_array_...
+Compiling module xil_defaultlib.start_for_normalize_array_array_...
+Compiling module xil_defaultlib.start_for_relu_array_array_ap_uf...
+Compiling module xil_defaultlib.start_for_relu_array_array_ap_uf...
+Compiling module xil_defaultlib.start_for_dense_array_array_ap_f...
+Compiling module xil_defaultlib.start_for_dense_array_array_ap_f...
+Compiling module xil_defaultlib.start_for_normalize_array_array_...
+Compiling module xil_defaultlib.start_for_normalize_array_array_...
+Compiling module xil_defaultlib.start_for_relu_array_array_ap_uf...
+Compiling module xil_defaultlib.start_for_relu_array_array_ap_uf...
+Compiling module xil_defaultlib.start_for_dense_array_array_ap_f...
+Compiling module xil_defaultlib.start_for_dense_array_array_ap_f...
+Compiling module xil_defaultlib.start_for_normalize_array_array_...
+Compiling module xil_defaultlib.start_for_normalize_array_array_...
+Compiling module xil_defaultlib.start_for_relu_array_array_ap_uf...
+Compiling module xil_defaultlib.start_for_relu_array_array_ap_uf...
+Compiling module xil_defaultlib.start_for_dense_array_array_ap_f...
+Compiling module xil_defaultlib.start_for_dense_array_array_ap_f...
+Compiling module xil_defaultlib.myproject
+Compiling module xil_defaultlib.Block_myproject_axi_exit31_proc
+Compiling module xil_defaultlib.myproject_axi_mux_63_16_1_1(ID=1...
+Compiling module xil_defaultlib.Loop_2_proc
+Compiling module xil_defaultlib.fifo_w16_d14400_A
+Compiling module xil_defaultlib.fifo_w1_d2_A_shiftReg
+Compiling module xil_defaultlib.fifo_w1_d2_A
+Compiling module xil_defaultlib.fifo_w16_d1_A_x_shiftReg
+Compiling module xil_defaultlib.fifo_w16_d1_A_x
+Compiling module xil_defaultlib.fifo_w16_d2_A_shiftReg
+Compiling module xil_defaultlib.fifo_w16_d2_A
+Compiling module xil_defaultlib.start_for_myproject_U0_shiftReg
+Compiling module xil_defaultlib.start_for_myproject_U0
+Compiling module xil_defaultlib.start_for_Block_myproject_axi_ex...
+Compiling module xil_defaultlib.start_for_Block_myproject_axi_ex...
+Compiling module xil_defaultlib.myproject_axi
+Compiling module xil_defaultlib.fifo(DEPTH=14400,WIDTH=32)
+Compiling module xil_defaultlib.fifo(DEPTH=14400,WIDTH=1)
+Compiling module xil_defaultlib.AESL_axi_s_in_r
+Compiling module xil_defaultlib.fifo(DEPTH=6,WIDTH=32)
+Compiling module xil_defaultlib.fifo(DEPTH=6,WIDTH=1)
+Compiling module xil_defaultlib.AESL_axi_s_out_r
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detect_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_report_unit(PROC_N...
+Compiling module xil_defaultlib.AESL_deadlock_detector_1
+Compiling module xil_defaultlib.apatb_myproject_axi_top
+Compiling module work.glbl
+Built simulation snapshot myproject_axi

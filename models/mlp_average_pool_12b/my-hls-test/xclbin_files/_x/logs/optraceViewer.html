@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+
+<html>
+<!-- Styles -->
+<style>
+    #chartdiv {
+      width: 100%;
+      height: 1000px;
+    }
+</style>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>OPTraceViewer</title>
+  <script src="https://www.amcharts.com/lib/3/amcharts.js">
+  </script>
+  <script src="https://www.amcharts.com/lib/3/serial.js">
+  </script>
+  <script src="https://www.amcharts.com/lib/3/gantt.js">
+  </script>
+  <script src="https://www.amcharts.com/lib/3/themes/light.js">
+  </script>
+  <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js">
+  </script>
+  <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all"/>
+
+  <form name="userInputForm" action="javascript:userInputFormCallback()">
+    <fieldset>
+    <legend>Graph Filters:</legend>
+    <table style="width:100%">
+      <col width="50"></col>
+      <col width="20"></col>
+      <col width="60"></col>
+      <tr>
+        <td style="text-align: center"; colspan="3"><input type="number" name="userDurationFilterSecInput" id="userDurationFilterSecInput" value="2" min="0" max="6000" step="1"> sec</td>
+        <td>Filter out run durations lower than this value</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td style="text-align: center"><input type="checkbox" name="userGroupPidSortSelected" id="userGroupPidSortSelected"></td>
+        <td>Group sort by process ID</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td bgcolor="#0099ff"></td>
+        <td style="text-align: center"><input type="checkbox" name="userRollupSelected" id="userRollupSelected"></td>
+        <td>Show rollup entries</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td bgcolor="#8dc49f"></td>
+        <td style="text-align: center"><input type="checkbox" name="userIndividualEntrySelected" id="userIndividualEntrySelected"></td>
+        <td>Show individual entries</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td bgcolor="#cd82ad"></td>
+        <td style="text-align: center"><input type="checkbox" name="userCheckpointEntrySelected" id="userCheckpointEntrySelected"></td>
+        <td>Show checkpoints entry</td>
+      </tr>
+       <tr>
+        <td></td>
+        <td bgcolor="#b9783f"></td>
+        <td style="text-align: center"><input type="checkbox" name="userReportEntrySelected" id="userReportEntrySelected"></td>
+        <td>Show report entry</td>
+      </tr>
+
+    </table>
+    <br>
+    <input name="Submit" type="submit" value="Update Graph">
+    </fieldset>
+  </form> 
+
+  <div id="chartdiv">
+  </div>
+
+  <script>
+  </script>
+
+</head>
+
+
+<body>
+<table id="myDynamicTable" cellpadding="2" cellspacing="2" border="1" onclick="tester()">
+  <tr>
+  <td>Task</td>
+  <td>Start</td>
+  <td>Duration</td>
+  </tr>
+</table>
+<script>
+  // Default User Selected variables
+  var m_secondFilter = 1;
+  var m_groupPidSort = true;
+  var m_showRollup = true;
+  var m_showIndividualEntry = false;
+  var m_showCheckpointEntry = false;
+  var m_showReportEntry = false;
+
+  function SetDefaultUserValues()
+  {
+    document.getElementById("userDurationFilterSecInput").value = m_secondFilter;
+    document.getElementById("userGroupPidSortSelected").checked = m_groupPidSort;
+    document.getElementById("userRollupSelected").checked = m_showRollup;
+    document.getElementById("userIndividualEntrySelected").checked = m_showIndividualEntry;
+    document.getElementById("userCheckpointEntrySelected").checked = m_showCheckpointEntry;
+    document.getElementById("userReportEntrySelected").checked = m_showReportEntry;
+  }
+
+  window.onload = function(){
+    SetDefaultUserValues();
+  }
+
+
+
+
+  // Header
+  var header = "Keyword|pid|Entry|SrcFile|Catagory|TimeStampMSec|Action|Task|Tags|Misc";
+                         
+  // Insert Raw Data Here
+  // Note: Do not change the following signature. 
+  var csvData =    [
+      "[OPTRACE]|655904|10|run|cpp|1656514050170|START|OCL_LINK|",
+      "[OPTRACE]|655904|11|setupBinaryForLink|cpp|1656514050170|START|Create Binary|",
+      "[OPTRACE]|655904|12||cpp|1656514050171|END|Create Binary|",
+      "[OPTRACE]|655904|13|setupBinaryForLink|cpp|1656514050171|START|Extract Kernels|",
+      "[OPTRACE]|655904|14||cpp|1656514050181|END|Extract Kernels|",
+      "[OPTRACE]|655904|15|launchStep_|cpp|1656514050264|START|Launch Step: system_link|",
+      "[OPTRACE]|655904|16||cpp|1656514058345|END|Launch Step: system_link|",
+      "[OPTRACE]|655904|17|launchStep_|cpp|1656514058346|START|Launch Step: cf2sw|",
+      "[OPTRACE]|655904|18||cpp|1656514059385|END|Launch Step: cf2sw|",
+      "[OPTRACE]|655904|19|launchStep_|cpp|1656514059386|START|Launch Step: rtd2_system_diagram|",
+      "[OPTRACE]|655904|1|main|cpp|1656514033270|START|v++|ROLLUP_0",
+      "[OPTRACE]|655904|20||cpp|1656514060148|END|Launch Step: rtd2_system_diagram|",
+      "[OPTRACE]|655904|21|launchStep_|cpp|1656514060148|START|Launch Step: vpl|",
+      "[OPTRACE]|655904|2|run|cpp|1656514033270|START|Validate Kernels|",
+      "[OPTRACE]|655904|3||cpp|1656514033339|END|Validate Kernels|",
+      "[OPTRACE]|655904|4|prepareProject|cpp|1656514033371|START|Create Solution|",
+      "[OPTRACE]|655904|5||cpp|1656514044365|END|Create Solution|",
+      "[OPTRACE]|655904|600||cpp|1656522636627|END|Launch Step: vpl|",
+      "[OPTRACE]|655904|601|launchStep_|cpp|1656522636627|START|Launch Step: rtdgen|",
+      "[OPTRACE]|655904|602|launchCf2sw_|cpp|1656522636630|START|Launch cf2sw|",
+      "[OPTRACE]|655904|603||cpp|1656522637687|END|Launch cf2sw|",
+      "[OPTRACE]|655904|604|writeSystemDiagram|cpp|1656522637687|START|writeSystemDiagram|",
+      "[OPTRACE]|655904|605||cpp|1656522637690|END|writeSystemDiagram|",
+      "[OPTRACE]|655904|606||cpp|1656522637690|END|Launch Step: rtdgen|",
+      "[OPTRACE]|655904|607|launchStep_|cpp|1656522637691|START|Launch Step: xclbinutil|",
+      "[OPTRACE]|655904|608||cpp|1656522637978|END|Launch Step: xclbinutil|",
+      "[OPTRACE]|655904|609|launchStep_|cpp|1656522637978|START|Launch Step: xclbinutilinfo|",
+      "[OPTRACE]|655904|610||cpp|1656522638587|END|Launch Step: xclbinutilinfo|",
+      "[OPTRACE]|655904|611|launchStep_|cpp|1656522638587|START|Launch Step: generate_sc_driver|",
+      "[OPTRACE]|655904|612||cpp|1656522638588|END|Launch Step: generate_sc_driver|",
+      "[OPTRACE]|655904|613||cpp|1656522638589|END|OCL_LINK|",
+      "[OPTRACE]|655904|614||cpp|1656522638990|END|v++|",
+      "[OPTRACE]|655904|6|prepareProject|cpp|1656514044366|START|Add Device|",
+      "[OPTRACE]|655904|7|addDevice|cpp|1656514044366|START|Find & Load Device|",
+      "[OPTRACE]|655904|8||cpp|1656514044525|END|Find & Load Device|",
+      "[OPTRACE]|655904|9||cpp|1656514050163|END|Add Device|",
+      "[OPTRACE]|656296|22|main|cpp|1656514061647|START|vpl|",
+      "[OPTRACE]|656296|23|runPlatformLinker|cpp|1656514061680|START|runPlatformLinker|",
+      "[OPTRACE]|656296|24|setupBinaryForLink|cpp|1656514061680|START|Create Solution|",
+      "[OPTRACE]|656296|25||cpp|1656514061684|END|Create Solution|",
+      "[OPTRACE]|656296|26|setupBinaryForLink|cpp|1656514061684|START|Add platform|",
+      "[OPTRACE]|656296|27||cpp|1656514067621|END|Add platform|",
+      "[OPTRACE]|656296|28|setupBinaryForLink|cpp|1656514067621|START|Create Binary|",
+      "[OPTRACE]|656296|29||cpp|1656514067621|END|Create Binary|",
+      "[OPTRACE]|656296|30|setupBinaryForLink|cpp|1656514067621|START|Create Kernels|",
+      "[OPTRACE]|656296|31||cpp|1656514067623|END|Create Kernels|",
+      "[OPTRACE]|656296|32|runPlatformLinker|cpp|1656514067631|START|Process Kernels|",
+      "[OPTRACE]|656296|33||cpp|1656514067631|END|Process Kernels|",
+      "[OPTRACE]|656296|34|runPlatformLinker|cpp|1656514067631|START|Process Kernel Debug|",
+      "[OPTRACE]|656296|35||cpp|1656514067631|END|Process Kernel Debug|",
+      "[OPTRACE]|656296|36|runPlatformLinker|cpp|1656514067631|START|Set Kernel Debug|",
+      "[OPTRACE]|656296|37||cpp|1656514067631|END|Set Kernel Debug|",
+      "[OPTRACE]|656296|38|runPlatformLinker|cpp|1656514067631|START|Set Miscellaneous|",
+      "[OPTRACE]|656296|39||cpp|1656514067631|END|Set Miscellaneous|",
+      "[OPTRACE]|656296|40|run|cpp|1656514067632|START|Extract Platform|",
+      "[OPTRACE]|656296|41||cpp|1656514072459|END|Extract Platform|",
+      "[OPTRACE]|656296|596|runPlatformLinker|cpp|1656522636254|START|Generate Resource Availability Report|",
+      "[OPTRACE]|656296|597||cpp|1656522636257|END|Generate Resource Availability Report|",
+      "[OPTRACE]|656296|598||cpp|1656522636257|END|runPlatformLinker|",
+      "[OPTRACE]|656296|599||cpp|1656522636610|END|vpl|",
+      "[OPTRACE]|656393|42|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/vpl.tcl|vivado_impl|1656514079239|START|Implementation|ROLLUP_1",
+      "[OPTRACE]|656393|43|ipirun.tcl|vpl|1656514079268|START|ipirun|ROLLUP_0",
+      "[OPTRACE]|656393|44|ipirun.tcl|vpl|1656514079269|END|ipirun|",
+      "[OPTRACE]|656393|45|ipirun.tcl|vpl|1656514079287|START|Source pre_sys_link Tcl script|",
+      "[OPTRACE]|656393|46|ipirun.tcl|vpl|1656514079288|END|Source pre_sys_link Tcl script|",
+      "[OPTRACE]|656393|47|ipirun.tcl|vpl|1656514079288|START|Create project|",
+      "[OPTRACE]|656393|48|ipirun.tcl|vpl|1656514081024|END|Create project|",
+      "[OPTRACE]|656393|49|ipirun.tcl|vpl|1656514081027|START|Create IP caching environment|",
+      "[OPTRACE]|656393|50|ipirun.tcl|vpl|1656514084865|END|Create IP caching environment|",
+      "[OPTRACE]|656393|51|ipirun.tcl|vpl|1656514084865|START|Import/add dynamic BD|",
+      "[OPTRACE]|656393|52|ipirun.tcl|vpl|1656514101987|END|Import/add dynamic BD|",
+      "[OPTRACE]|656393|53|ipirun.tcl|vpl|1656514101987|START|Open BD and insert kernels|",
+      "[OPTRACE]|656393|54|ipirun.tcl|vpl|1656514126083|END|Open BD and insert kernels|",
+      "[OPTRACE]|656393|55|ipirun.tcl|vpl|1656514126085|START|Add debug/profiling support|",
+      "[OPTRACE]|656393|56|ipirun.tcl|vpl|1656514126197|END|Add debug/profiling support|",
+      "[OPTRACE]|656393|57|ipirun.tcl|vpl|1656514126197|START|IPI address assignments|",
+      "[OPTRACE]|656393|58|ipirun.tcl|vpl|1656514126198|END|IPI address assignments|",
+      "[OPTRACE]|656393|59|ipirun.tcl|vpl|1656514126198|START|Sourcing hardware platform post_sys_link Tcl script|",
+      "[OPTRACE]|656393|60|ipirun.tcl|vpl|1656514126201|END|Sourcing hardware platform post_sys_link Tcl script|",
+      "[OPTRACE]|656393|61|ipirun.tcl|vpl|1656514126206|START|Save BD|",
+      "[OPTRACE]|656393|62|ipirun.tcl|vpl|1656514126329|END|Save BD|",
+      "[OPTRACE]|656393|63|ipirun.tcl|vpl|1656514126329|START|Create address map and debug IP profile files|",
+      "[OPTRACE]|656393|64|ipirun.tcl|vpl|1656514126334|END|Create address map and debug IP profile files|",
+      "[OPTRACE]|656393|65|ipirun.tcl|vpl|1656514126334|START|Generate output products|",
+      "[OPTRACE]|656393|66|ipirun.tcl|vpl|1656514201414|END|Generate output products|",
+      "[OPTRACE]|656393|67|ipirun.tcl|vpl|1656514201417|START|Source report_commands_tcl|",
+      "[OPTRACE]|656393|68|ipirun.tcl|vpl|1656514201540|END|Source report_commands_tcl|",
+      "[OPTRACE]|656393|69|ipirun.tcl|vpl|1656514201540|START|Source synth_props_tcl|",
+      "[OPTRACE]|657254|110|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656514223160|END|Adding files|",
+      "[OPTRACE]|657254|111|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656514223161|START|Configure IP Cache|",
+      "[OPTRACE]|657254|116|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656514223172|END|Configure IP Cache|",
+      "[OPTRACE]|657254|118|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656514223173|END|pfm_dynamic_s00_regslice_22_synth_1|",
+      "[OPTRACE]|657254|78|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656514216953|START|pfm_dynamic_s00_regslice_22_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657254|80|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656514216955|START|Creating in-memory project|",
+      "[OPTRACE]|657254|89|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656514222898|END|Creating in-memory project|",
+      "[OPTRACE]|657254|91|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656514222898|START|Adding files|",
+      "[OPTRACE]|657255|112|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656514223161|END|Adding files|",
+      "[OPTRACE]|657255|113|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656514223163|START|Configure IP Cache|",
+      "[OPTRACE]|657255|122|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656514223177|END|Configure IP Cache|",
+      "[OPTRACE]|657255|123|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656514223177|END|pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1|",
+      "[OPTRACE]|657255|73|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656514216943|START|pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657255|76|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656514216946|START|Creating in-memory project|",
+      "[OPTRACE]|657255|94|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656514222906|END|Creating in-memory project|",
+      "[OPTRACE]|657255|95|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656514222906|START|Adding files|",
+      "[OPTRACE]|657256|117|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656514223172|END|Adding files|",
+      "[OPTRACE]|657256|119|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656514223174|START|Configure IP Cache|",
+      "[OPTRACE]|657256|124|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656514223186|END|Configure IP Cache|",
+      "[OPTRACE]|657256|125|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656514223187|END|pfm_dynamic_axi_user_slrcrossing_si_0_synth_1|",
+      "[OPTRACE]|657256|70|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656514216925|START|pfm_dynamic_axi_user_slrcrossing_si_0_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657256|71|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656514216928|START|Creating in-memory project|",
+      "[OPTRACE]|657256|92|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656514222901|END|Creating in-memory project|",
+      "[OPTRACE]|657256|93|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656514222901|START|Adding files|",
+      "[OPTRACE]|657257|114|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656514223165|END|Adding files|",
+      "[OPTRACE]|657257|115|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656514223167|START|Configure IP Cache|",
+      "[OPTRACE]|657257|120|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656514223175|END|Configure IP Cache|",
+      "[OPTRACE]|657257|121|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656514223176|END|pfm_dynamic_m01_regslice_10_synth_1|",
+      "[OPTRACE]|657257|79|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656514216954|START|pfm_dynamic_m01_regslice_10_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657257|81|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656514216957|START|Creating in-memory project|",
+      "[OPTRACE]|657257|88|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656514222897|END|Creating in-memory project|",
+      "[OPTRACE]|657257|90|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656514222898|START|Adding files|",
+      "[OPTRACE]|657258|100|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656514222964|END|Creating in-memory project|",
+      "[OPTRACE]|657258|101|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656514222964|START|Adding files|",
+      "[OPTRACE]|657258|126|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656514223207|END|Adding files|",
+      "[OPTRACE]|657258|127|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656514223208|START|Configure IP Cache|",
+      "[OPTRACE]|657258|128|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656514223218|END|Configure IP Cache|",
+      "[OPTRACE]|657258|129|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656514223218|END|pfm_dynamic_axi_vip_data_1_synth_1|",
+      "[OPTRACE]|657258|84|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656514216987|START|pfm_dynamic_axi_vip_data_1_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657258|85|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656514216990|START|Creating in-memory project|",
+      "[OPTRACE]|657259|102|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656514223106|END|Adding files|",
+      "[OPTRACE]|657259|103|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656514223107|START|Configure IP Cache|",
+      "[OPTRACE]|657259|104|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656514223122|END|Configure IP Cache|",
+      "[OPTRACE]|657259|105|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656514223123|END|pfm_dynamic_axi_gpio_null_0_synth_1|",
+      "[OPTRACE]|657259|72|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656514216941|START|pfm_dynamic_axi_gpio_null_0_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657259|74|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656514216944|START|Creating in-memory project|",
+      "[OPTRACE]|657259|86|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656514222866|END|Creating in-memory project|",
+      "[OPTRACE]|657259|87|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656514222866|START|Adding files|",
+      "[OPTRACE]|657260|130|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656514223219|END|Adding files|",
+      "[OPTRACE]|657260|131|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656514223220|START|Configure IP Cache|",
+      "[OPTRACE]|657260|132|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656514223225|END|Configure IP Cache|",
+      "[OPTRACE]|657260|133|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656514223225|START|synth_design|",
+      "[OPTRACE]|657260|278|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656514983036|END|synth_design|",
+      "[OPTRACE]|657260|279|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656514983036|START|Write IP Cache|",
+      "[OPTRACE]|657260|280|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656515028056|END|Write IP Cache|",
+      "[OPTRACE]|657260|281|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656515028090|START|write_checkpoint|CHECKPOINT",
+      "[OPTRACE]|657260|282|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656515060167|END|write_checkpoint|",
+      "[OPTRACE]|657260|283|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656515060167|START|synth reports|REPORT",
+      "[OPTRACE]|657260|284|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656515061030|END|synth reports|",
+      "[OPTRACE]|657260|285|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656515073939|END|pfm_dynamic_krnl_rtl_1_0_synth_1|",
+      "[OPTRACE]|657260|82|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656514216965|START|pfm_dynamic_krnl_rtl_1_0_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657260|83|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656514216968|START|Creating in-memory project|",
+      "[OPTRACE]|657260|96|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656514222919|END|Creating in-memory project|",
+      "[OPTRACE]|657260|97|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_krnl_rtl_1_0_synth_1/pfm_dynamic_krnl_rtl_1_0.tcl|vivado_synth|1656514222919|START|Adding files|",
+      "[OPTRACE]|657261|106|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656514223152|END|Adding files|",
+      "[OPTRACE]|657261|107|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656514223152|START|Configure IP Cache|",
+      "[OPTRACE]|657261|108|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656514223157|END|Configure IP Cache|",
+      "[OPTRACE]|657261|109|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656514223157|END|pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1|",
+      "[OPTRACE]|657261|75|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656514216945|START|pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657261|77|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656514216949|START|Creating in-memory project|",
+      "[OPTRACE]|657261|98|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656514222921|END|Creating in-memory project|",
+      "[OPTRACE]|657261|99|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656514222921|START|Adding files|",
+      "[OPTRACE]|657648|142|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656514232756|START|pfm_dynamic_axi_vip_data_3_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657648|143|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656514232758|START|Creating in-memory project|",
+      "[OPTRACE]|657648|152|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656514238688|END|Creating in-memory project|",
+      "[OPTRACE]|657648|153|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656514238688|START|Adding files|",
+      "[OPTRACE]|657648|172|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656514238959|END|Adding files|",
+      "[OPTRACE]|657648|174|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656514238960|START|Configure IP Cache|",
+      "[OPTRACE]|657648|177|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656514238968|END|Configure IP Cache|",
+      "[OPTRACE]|657648|179|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656514238969|END|pfm_dynamic_axi_vip_data_3_synth_1|",
+      "[OPTRACE]|657649|144|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656514232802|START|pfm_dynamic_axi_vip_data_2_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657649|145|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656514232805|START|Creating in-memory project|",
+      "[OPTRACE]|657649|160|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656514238844|END|Creating in-memory project|",
+      "[OPTRACE]|657649|161|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656514238844|START|Adding files|",
+      "[OPTRACE]|657649|186|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656514239071|END|Adding files|",
+      "[OPTRACE]|657649|187|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656514239071|START|Configure IP Cache|",
+      "[OPTRACE]|657649|188|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656514239077|END|Configure IP Cache|",
+      "[OPTRACE]|657649|189|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656514239077|END|pfm_dynamic_axi_vip_data_2_synth_1|",
+      "[OPTRACE]|657650|134|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656514232726|START|pfm_dynamic_s00_regslice_24_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657650|136|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656514232732|START|Creating in-memory project|",
+      "[OPTRACE]|657650|150|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656514238681|END|Creating in-memory project|",
+      "[OPTRACE]|657650|151|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656514238681|START|Adding files|",
+      "[OPTRACE]|657650|166|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656514238930|END|Adding files|",
+      "[OPTRACE]|657650|167|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656514238931|START|Configure IP Cache|",
+      "[OPTRACE]|657650|168|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656514238937|END|Configure IP Cache|",
+      "[OPTRACE]|657650|169|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656514238938|END|pfm_dynamic_s00_regslice_24_synth_1|",
+      "[OPTRACE]|657654|135|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656514232728|START|pfm_dynamic_s00_regslice_23_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657654|137|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656514232733|START|Creating in-memory project|",
+      "[OPTRACE]|657654|154|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656514238693|END|Creating in-memory project|",
+      "[OPTRACE]|657654|155|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656514238693|START|Adding files|",
+      "[OPTRACE]|657654|173|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656514238959|END|Adding files|",
+      "[OPTRACE]|657654|175|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656514238961|START|Configure IP Cache|",
+      "[OPTRACE]|657654|180|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656514238969|END|Configure IP Cache|",
+      "[OPTRACE]|657654|181|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656514238970|END|pfm_dynamic_s00_regslice_23_synth_1|",
+      "[OPTRACE]|657656|138|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656514232737|START|pfm_dynamic_axi_gpio_null_2_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657656|139|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656514232740|START|Creating in-memory project|",
+      "[OPTRACE]|657656|148|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656514238648|END|Creating in-memory project|",
+      "[OPTRACE]|657656|149|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656514238649|START|Adding files|",
+      "[OPTRACE]|657656|162|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656514238886|END|Adding files|",
+      "[OPTRACE]|657656|163|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656514238888|START|Configure IP Cache|",
+      "[OPTRACE]|657656|164|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656514238904|END|Configure IP Cache|",
+      "[OPTRACE]|657656|165|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656514238905|END|pfm_dynamic_axi_gpio_null_2_synth_1|",
+      "[OPTRACE]|657657|140|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656514232745|START|pfm_dynamic_axi_gpio_null_3_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657657|141|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656514232749|START|Creating in-memory project|",
+      "[OPTRACE]|657657|156|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656514238712|END|Creating in-memory project|",
+      "[OPTRACE]|657657|157|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656514238712|START|Adding files|",
+      "[OPTRACE]|657657|170|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656514238948|END|Adding files|",
+      "[OPTRACE]|657657|171|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656514238950|START|Configure IP Cache|",
+      "[OPTRACE]|657657|176|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656514238968|END|Configure IP Cache|",
+      "[OPTRACE]|657657|178|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656514238968|END|pfm_dynamic_axi_gpio_null_3_synth_1|",
+      "[OPTRACE]|657658|146|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656514232829|START|pfm_dynamic_m00_regslice_10_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|657658|147|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656514232833|START|Creating in-memory project|",
+      "[OPTRACE]|657658|158|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656514238756|END|Creating in-memory project|",
+      "[OPTRACE]|657658|159|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656514238756|START|Adding files|",
+      "[OPTRACE]|657658|182|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656514239015|END|Adding files|",
+      "[OPTRACE]|657658|183|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656514239016|START|Configure IP Cache|",
+      "[OPTRACE]|657658|184|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656514239026|END|Configure IP Cache|",
+      "[OPTRACE]|657658|185|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656514239026|END|pfm_dynamic_m00_regslice_10_synth_1|",
+      "[OPTRACE]|658525|192|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656514248615|START|pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|658525|193|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656514248619|START|Creating in-memory project|",
+      "[OPTRACE]|658525|208|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656514254572|END|Creating in-memory project|",
+      "[OPTRACE]|658525|209|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656514254573|START|Adding files|",
+      "[OPTRACE]|658525|226|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656514254808|END|Adding files|",
+      "[OPTRACE]|658525|227|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656514254808|START|Configure IP Cache|",
+      "[OPTRACE]|658525|228|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656514254817|END|Configure IP Cache|",
+      "[OPTRACE]|658525|229|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656514254817|END|pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1|",
+      "[OPTRACE]|658530|190|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656514248607|START|pfm_dynamic_axi_user_slrcrossing_si_1_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|658530|191|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656514248609|START|Creating in-memory project|",
+      "[OPTRACE]|658530|204|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656514254530|END|Creating in-memory project|",
+      "[OPTRACE]|658530|205|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656514254531|START|Adding files|",
+      "[OPTRACE]|658530|219|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656514254761|END|Adding files|",
+      "[OPTRACE]|658530|221|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656514254762|START|Configure IP Cache|",
+      "[OPTRACE]|658530|224|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656514254773|END|Configure IP Cache|",
+      "[OPTRACE]|658530|225|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656514254773|END|pfm_dynamic_axi_user_slrcrossing_si_1_synth_1|",
+      "[OPTRACE]|658533|198|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656514248643|START|pfm_dynamic_m00_regslice_8_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|658533|201|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656514248646|START|Creating in-memory project|",
+      "[OPTRACE]|658533|214|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656514254651|END|Creating in-memory project|",
+      "[OPTRACE]|658533|215|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656514254651|START|Adding files|",
+      "[OPTRACE]|658533|238|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656514254885|END|Adding files|",
+      "[OPTRACE]|658533|239|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656514254887|START|Configure IP Cache|",
+      "[OPTRACE]|658533|240|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656514254897|END|Configure IP Cache|",
+      "[OPTRACE]|658533|241|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656514254898|END|pfm_dynamic_m00_regslice_8_synth_1|",
+      "[OPTRACE]|658534|199|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656514248643|START|pfm_dynamic_m00_regslice_7_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|658534|200|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656514248645|START|Creating in-memory project|",
+      "[OPTRACE]|658534|206|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656514254537|END|Creating in-memory project|",
+      "[OPTRACE]|658534|207|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656514254537|START|Adding files|",
+      "[OPTRACE]|658534|218|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656514254761|END|Adding files|",
+      "[OPTRACE]|658534|220|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656514254762|START|Configure IP Cache|",
+      "[OPTRACE]|658534|222|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656514254768|END|Configure IP Cache|",
+      "[OPTRACE]|658534|223|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656514254769|END|pfm_dynamic_m00_regslice_7_synth_1|",
+      "[OPTRACE]|658535|202|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656514248753|START|pfm_dynamic_m01_regslice_8_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|658535|203|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656514248757|START|Creating in-memory project|",
+      "[OPTRACE]|658535|216|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656514254695|END|Creating in-memory project|",
+      "[OPTRACE]|658535|217|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656514254695|START|Adding files|",
+      "[OPTRACE]|658535|242|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656514254923|END|Adding files|",
+      "[OPTRACE]|658535|243|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656514254925|START|Configure IP Cache|",
+      "[OPTRACE]|658535|244|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656514254934|END|Configure IP Cache|",
+      "[OPTRACE]|658535|245|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656514254934|END|pfm_dynamic_m01_regslice_8_synth_1|",
+      "[OPTRACE]|658536|194|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656514248624|START|pfm_dynamic_s00_regslice_18_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|658536|195|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656514248627|START|Creating in-memory project|",
+      "[OPTRACE]|658536|212|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656514254610|END|Creating in-memory project|",
+      "[OPTRACE]|658536|213|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656514254610|START|Adding files|",
+      "[OPTRACE]|658536|234|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656514254857|END|Adding files|",
+      "[OPTRACE]|658536|235|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656514254859|START|Configure IP Cache|",
+      "[OPTRACE]|658536|236|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656514254871|END|Configure IP Cache|",
+      "[OPTRACE]|658536|237|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656514254871|END|pfm_dynamic_s00_regslice_18_synth_1|",
+      "[OPTRACE]|658537|196|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656514248640|START|pfm_dynamic_m00_regslice_9_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|658537|197|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656514248642|START|Creating in-memory project|",
+      "[OPTRACE]|658537|210|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656514254580|END|Creating in-memory project|",
+      "[OPTRACE]|658537|211|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656514254580|START|Adding files|",
+      "[OPTRACE]|658537|230|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656514254817|END|Adding files|",
+      "[OPTRACE]|658537|231|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656514254818|START|Configure IP Cache|",
+      "[OPTRACE]|658537|232|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656514254829|END|Configure IP Cache|",
+      "[OPTRACE]|658537|233|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656514254830|END|pfm_dynamic_m00_regslice_9_synth_1|",
+      "[OPTRACE]|658779|246|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656514264188|START|pfm_dynamic_m01_regslice_9_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|658779|247|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656514264192|START|Creating in-memory project|",
+      "[OPTRACE]|658779|254|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656514269853|END|Creating in-memory project|",
+      "[OPTRACE]|658779|255|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656514269854|START|Adding files|",
+      "[OPTRACE]|658779|258|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656514270076|END|Adding files|",
+      "[OPTRACE]|658779|259|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656514270077|START|Configure IP Cache|",
+      "[OPTRACE]|658779|260|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656514270083|END|Configure IP Cache|",
+      "[OPTRACE]|658779|261|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656514270084|END|pfm_dynamic_m01_regslice_9_synth_1|",
+      "[OPTRACE]|658783|252|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656514264408|START|pfm_dynamic_s00_regslice_21_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|658783|253|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656514264410|START|Creating in-memory project|",
+      "[OPTRACE]|658783|264|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656514270125|END|Creating in-memory project|",
+      "[OPTRACE]|658783|265|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656514270126|START|Adding files|",
+      "[OPTRACE]|658783|274|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656514270347|END|Adding files|",
+      "[OPTRACE]|658783|275|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656514270348|START|Configure IP Cache|",
+      "[OPTRACE]|658783|276|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656514270354|END|Configure IP Cache|",
+      "[OPTRACE]|658783|277|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656514270354|END|pfm_dynamic_s00_regslice_21_synth_1|",
+      "[OPTRACE]|658784|248|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656514264278|START|pfm_dynamic_s00_regslice_19_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|658784|249|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656514264281|START|Creating in-memory project|",
+      "[OPTRACE]|658784|256|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656514270061|END|Creating in-memory project|",
+      "[OPTRACE]|658784|257|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656514270062|START|Adding files|",
+      "[OPTRACE]|658784|266|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656514270295|END|Adding files|",
+      "[OPTRACE]|658784|267|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656514270296|START|Configure IP Cache|",
+      "[OPTRACE]|658784|268|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656514270308|END|Configure IP Cache|",
+      "[OPTRACE]|658784|269|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656514270308|END|pfm_dynamic_s00_regslice_19_synth_1|",
+      "[OPTRACE]|658785|250|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656514264396|START|pfm_dynamic_m01_regslice_7_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|658785|251|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656514264399|START|Creating in-memory project|",
+      "[OPTRACE]|658785|262|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656514270092|END|Creating in-memory project|",
+      "[OPTRACE]|658785|263|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656514270092|START|Adding files|",
+      "[OPTRACE]|658785|270|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656514270326|END|Adding files|",
+      "[OPTRACE]|658785|271|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656514270328|START|Configure IP Cache|",
+      "[OPTRACE]|658785|272|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656514270338|END|Configure IP Cache|",
+      "[OPTRACE]|658785|273|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656514270338|END|pfm_dynamic_m01_regslice_7_synth_1|",
+      "[OPTRACE]|660481|286|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515083614|START|my_rm_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|660481|287|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515083618|START|Creating in-memory project|",
+      "[OPTRACE]|660481|288|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515088956|END|Creating in-memory project|",
+      "[OPTRACE]|660481|289|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515088956|START|Adding files|",
+      "[OPTRACE]|660481|290|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515093604|END|Adding files|",
+      "[OPTRACE]|660481|291|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515093615|START|synth_design|",
+      "[OPTRACE]|660481|292|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515223542|END|synth_design|",
+      "[OPTRACE]|660481|293|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515223566|START|write_checkpoint|CHECKPOINT",
+      "[OPTRACE]|660481|294|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515224845|END|write_checkpoint|",
+      "[OPTRACE]|660481|295|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515224845|START|synth reports|REPORT",
+      "[OPTRACE]|660481|296|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515224845|END|synth reports|",
+      "[OPTRACE]|660481|297|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/my_rm_synth_1/pfm_dynamic.tcl|vivado_synth|1656515225954|END|my_rm_synth_1|",
+      "[OPTRACE]|661214|298|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656515240199|START|pfm_dynamic_axi_gpio_null_0_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|661214|299|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656515240203|START|Creating in-memory project|",
+      "[OPTRACE]|661214|300|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656515245489|END|Creating in-memory project|",
+      "[OPTRACE]|661214|301|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656515245489|START|Adding files|",
+      "[OPTRACE]|661214|302|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656515245680|END|Adding files|",
+      "[OPTRACE]|661214|303|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656515245681|START|Configure IP Cache|",
+      "[OPTRACE]|661214|304|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656515245692|END|Configure IP Cache|",
+      "[OPTRACE]|661214|305|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_0_synth_1/pfm_dynamic_axi_gpio_null_0.tcl|vivado_synth|1656515245692|END|pfm_dynamic_axi_gpio_null_0_synth_1|",
+      "[OPTRACE]|661287|306|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656515254807|START|pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|661287|307|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656515254810|START|Creating in-memory project|",
+      "[OPTRACE]|661287|308|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656515260123|END|Creating in-memory project|",
+      "[OPTRACE]|661287|309|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656515260123|START|Adding files|",
+      "[OPTRACE]|661287|310|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656515260342|END|Adding files|",
+      "[OPTRACE]|661287|311|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656515260342|START|Configure IP Cache|",
+      "[OPTRACE]|661287|312|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656515260350|END|Configure IP Cache|",
+      "[OPTRACE]|661287|313|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_1.tcl|vivado_synth|1656515260351|END|pfm_dynamic_axi_user_slrcrossing_mi_1_synth_1|",
+      "[OPTRACE]|661358|314|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656515269575|START|pfm_dynamic_axi_user_slrcrossing_si_0_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|661358|315|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656515269579|START|Creating in-memory project|",
+      "[OPTRACE]|661358|316|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656515274882|END|Creating in-memory project|",
+      "[OPTRACE]|661358|317|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656515274882|START|Adding files|",
+      "[OPTRACE]|661358|318|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656515275100|END|Adding files|",
+      "[OPTRACE]|661358|319|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656515275101|START|Configure IP Cache|",
+      "[OPTRACE]|661358|320|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656515275111|END|Configure IP Cache|",
+      "[OPTRACE]|661358|321|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_0_synth_1/pfm_dynamic_axi_user_slrcrossing_si_0.tcl|vivado_synth|1656515275111|END|pfm_dynamic_axi_user_slrcrossing_si_0_synth_1|",
+      "[OPTRACE]|661430|322|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656515284302|START|pfm_dynamic_axi_vip_data_1_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|661430|323|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656515284304|START|Creating in-memory project|",
+      "[OPTRACE]|661430|324|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656515289665|END|Creating in-memory project|",
+      "[OPTRACE]|661430|325|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656515289665|START|Adding files|",
+      "[OPTRACE]|661430|326|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656515289874|END|Adding files|",
+      "[OPTRACE]|661430|327|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656515289874|START|Configure IP Cache|",
+      "[OPTRACE]|661430|328|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656515289880|END|Configure IP Cache|",
+      "[OPTRACE]|661430|329|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_1_synth_1/pfm_dynamic_axi_vip_data_1.tcl|vivado_synth|1656515289880|END|pfm_dynamic_axi_vip_data_1_synth_1|",
+      "[OPTRACE]|661501|330|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656515299137|START|pfm_dynamic_axi_gpio_null_2_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|661501|331|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656515299139|START|Creating in-memory project|",
+      "[OPTRACE]|661501|332|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656515304543|END|Creating in-memory project|",
+      "[OPTRACE]|661501|333|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656515304543|START|Adding files|",
+      "[OPTRACE]|661501|334|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656515304745|END|Adding files|",
+      "[OPTRACE]|661501|335|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656515304745|START|Configure IP Cache|",
+      "[OPTRACE]|661501|336|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656515304756|END|Configure IP Cache|",
+      "[OPTRACE]|661501|337|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_2_synth_1/pfm_dynamic_axi_gpio_null_2.tcl|vivado_synth|1656515304757|END|pfm_dynamic_axi_gpio_null_2_synth_1|",
+      "[OPTRACE]|661576|338|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656515313934|START|pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|661576|339|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656515313937|START|Creating in-memory project|",
+      "[OPTRACE]|661576|340|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656515319290|END|Creating in-memory project|",
+      "[OPTRACE]|661576|341|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656515319290|START|Adding files|",
+      "[OPTRACE]|661576|342|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656515319506|END|Adding files|",
+      "[OPTRACE]|661576|343|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656515319506|START|Configure IP Cache|",
+      "[OPTRACE]|661576|344|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656515319514|END|Configure IP Cache|",
+      "[OPTRACE]|661576|345|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1/pfm_dynamic_axi_user_slrcrossing_mi_2.tcl|vivado_synth|1656515319515|END|pfm_dynamic_axi_user_slrcrossing_mi_2_synth_1|",
+      "[OPTRACE]|661647|346|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656515328832|START|pfm_dynamic_axi_user_slrcrossing_si_1_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|661647|347|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656515328834|START|Creating in-memory project|",
+      "[OPTRACE]|661647|348|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656515334226|END|Creating in-memory project|",
+      "[OPTRACE]|661647|349|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656515334227|START|Adding files|",
+      "[OPTRACE]|661647|350|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656515334445|END|Adding files|",
+      "[OPTRACE]|661647|351|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656515334446|START|Configure IP Cache|",
+      "[OPTRACE]|661647|352|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656515334457|END|Configure IP Cache|",
+      "[OPTRACE]|661647|353|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_user_slrcrossing_si_1_synth_1/pfm_dynamic_axi_user_slrcrossing_si_1.tcl|vivado_synth|1656515334457|END|pfm_dynamic_axi_user_slrcrossing_si_1_synth_1|",
+      "[OPTRACE]|661719|354|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656515343598|START|pfm_dynamic_axi_vip_data_2_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|661719|355|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656515343602|START|Creating in-memory project|",
+      "[OPTRACE]|661719|356|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656515349014|END|Creating in-memory project|",
+      "[OPTRACE]|661719|357|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656515349014|START|Adding files|",
+      "[OPTRACE]|661719|358|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656515349229|END|Adding files|",
+      "[OPTRACE]|661719|359|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656515349229|START|Configure IP Cache|",
+      "[OPTRACE]|661719|360|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656515349235|END|Configure IP Cache|",
+      "[OPTRACE]|661719|361|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_2_synth_1/pfm_dynamic_axi_vip_data_2.tcl|vivado_synth|1656515349235|END|pfm_dynamic_axi_vip_data_2_synth_1|",
+      "[OPTRACE]|661794|362|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656515358532|START|pfm_dynamic_axi_gpio_null_3_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|661794|363|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656515358536|START|Creating in-memory project|",
+      "[OPTRACE]|661794|364|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656515363929|END|Creating in-memory project|",
+      "[OPTRACE]|661794|365|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656515363929|START|Adding files|",
+      "[OPTRACE]|661794|366|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656515364129|END|Adding files|",
+      "[OPTRACE]|661794|367|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656515364130|START|Configure IP Cache|",
+      "[OPTRACE]|661794|368|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656515364141|END|Configure IP Cache|",
+      "[OPTRACE]|661794|369|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_gpio_null_3_synth_1/pfm_dynamic_axi_gpio_null_3.tcl|vivado_synth|1656515364141|END|pfm_dynamic_axi_gpio_null_3_synth_1|",
+      "[OPTRACE]|661873|370|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656515373494|START|pfm_dynamic_axi_vip_data_3_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|661873|371|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656515373496|START|Creating in-memory project|",
+      "[OPTRACE]|661873|372|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656515378936|END|Creating in-memory project|",
+      "[OPTRACE]|661873|373|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656515378936|START|Adding files|",
+      "[OPTRACE]|661873|374|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656515379147|END|Adding files|",
+      "[OPTRACE]|661873|375|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656515379148|START|Configure IP Cache|",
+      "[OPTRACE]|661873|376|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656515379153|END|Configure IP Cache|",
+      "[OPTRACE]|661873|377|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_data_3_synth_1/pfm_dynamic_axi_vip_data_3.tcl|vivado_synth|1656515379153|END|pfm_dynamic_axi_vip_data_3_synth_1|",
+      "[OPTRACE]|662002|378|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656515388534|START|pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662002|379|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656515388538|START|Creating in-memory project|",
+      "[OPTRACE]|662002|380|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656515393970|END|Creating in-memory project|",
+      "[OPTRACE]|662002|381|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656515393970|START|Adding files|",
+      "[OPTRACE]|662002|382|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656515394189|END|Adding files|",
+      "[OPTRACE]|662002|383|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656515394190|START|Configure IP Cache|",
+      "[OPTRACE]|662002|384|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656515394195|END|Configure IP Cache|",
+      "[OPTRACE]|662002|385|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1/pfm_dynamic_axi_vip_ctrl_userpf_0.tcl|vivado_synth|1656515394195|END|pfm_dynamic_axi_vip_ctrl_userpf_0_synth_1|",
+      "[OPTRACE]|662091|386|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656515403469|START|pfm_dynamic_s00_regslice_22_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662091|387|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656515403472|START|Creating in-memory project|",
+      "[OPTRACE]|662091|388|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656515408832|END|Creating in-memory project|",
+      "[OPTRACE]|662091|389|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656515408832|START|Adding files|",
+      "[OPTRACE]|662091|390|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656515409082|END|Adding files|",
+      "[OPTRACE]|662091|391|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656515409083|START|Configure IP Cache|",
+      "[OPTRACE]|662091|392|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656515409095|END|Configure IP Cache|",
+      "[OPTRACE]|662091|393|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_22_synth_1/pfm_dynamic_s00_regslice_22.tcl|vivado_synth|1656515409095|END|pfm_dynamic_s00_regslice_22_synth_1|",
+      "[OPTRACE]|662176|394|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656515418359|START|pfm_dynamic_m00_regslice_10_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662176|395|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656515418362|START|Creating in-memory project|",
+      "[OPTRACE]|662176|396|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656515423733|END|Creating in-memory project|",
+      "[OPTRACE]|662176|397|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656515423733|START|Adding files|",
+      "[OPTRACE]|662176|398|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656515423961|END|Adding files|",
+      "[OPTRACE]|662176|399|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656515423963|START|Configure IP Cache|",
+      "[OPTRACE]|662176|400|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656515423974|END|Configure IP Cache|",
+      "[OPTRACE]|662176|401|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_10_synth_1/pfm_dynamic_m00_regslice_10.tcl|vivado_synth|1656515423975|END|pfm_dynamic_m00_regslice_10_synth_1|",
+      "[OPTRACE]|662254|402|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656515433122|START|pfm_dynamic_m01_regslice_10_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662254|403|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656515433126|START|Creating in-memory project|",
+      "[OPTRACE]|662254|404|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656515438476|END|Creating in-memory project|",
+      "[OPTRACE]|662254|405|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656515438476|START|Adding files|",
+      "[OPTRACE]|662254|406|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656515438693|END|Adding files|",
+      "[OPTRACE]|662254|407|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656515438693|START|Configure IP Cache|",
+      "[OPTRACE]|662254|408|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656515438699|END|Configure IP Cache|",
+      "[OPTRACE]|662254|409|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_10_synth_1/pfm_dynamic_m01_regslice_10.tcl|vivado_synth|1656515438700|END|pfm_dynamic_m01_regslice_10_synth_1|",
+      "[OPTRACE]|662328|410|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656515447821|START|pfm_dynamic_s00_regslice_24_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662328|411|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656515447825|START|Creating in-memory project|",
+      "[OPTRACE]|662328|412|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656515453141|END|Creating in-memory project|",
+      "[OPTRACE]|662328|413|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656515453141|START|Adding files|",
+      "[OPTRACE]|662328|414|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656515453355|END|Adding files|",
+      "[OPTRACE]|662328|415|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656515453355|START|Configure IP Cache|",
+      "[OPTRACE]|662328|416|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656515453361|END|Configure IP Cache|",
+      "[OPTRACE]|662328|417|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_24_synth_1/pfm_dynamic_s00_regslice_24.tcl|vivado_synth|1656515453362|END|pfm_dynamic_s00_regslice_24_synth_1|",
+      "[OPTRACE]|662406|418|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656515462447|START|pfm_dynamic_s00_regslice_23_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662406|419|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656515462450|START|Creating in-memory project|",
+      "[OPTRACE]|662406|420|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656515467740|END|Creating in-memory project|",
+      "[OPTRACE]|662406|421|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656515467741|START|Adding files|",
+      "[OPTRACE]|662406|422|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656515467956|END|Adding files|",
+      "[OPTRACE]|662406|423|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656515467957|START|Configure IP Cache|",
+      "[OPTRACE]|662406|424|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656515467963|END|Configure IP Cache|",
+      "[OPTRACE]|662406|425|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_23_synth_1/pfm_dynamic_s00_regslice_23.tcl|vivado_synth|1656515467963|END|pfm_dynamic_s00_regslice_23_synth_1|",
+      "[OPTRACE]|662477|426|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656515477047|START|pfm_dynamic_s00_regslice_18_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662477|427|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656515477050|START|Creating in-memory project|",
+      "[OPTRACE]|662477|428|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656515482296|END|Creating in-memory project|",
+      "[OPTRACE]|662477|429|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656515482297|START|Adding files|",
+      "[OPTRACE]|662477|430|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656515482504|END|Adding files|",
+      "[OPTRACE]|662477|431|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656515482505|START|Configure IP Cache|",
+      "[OPTRACE]|662477|432|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656515482511|END|Configure IP Cache|",
+      "[OPTRACE]|662477|433|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_18_synth_1/pfm_dynamic_s00_regslice_18.tcl|vivado_synth|1656515482511|END|pfm_dynamic_s00_regslice_18_synth_1|",
+      "[OPTRACE]|662548|434|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656515491610|START|pfm_dynamic_m00_regslice_7_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662548|435|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656515491614|START|Creating in-memory project|",
+      "[OPTRACE]|662548|436|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656515496939|END|Creating in-memory project|",
+      "[OPTRACE]|662548|437|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656515496940|START|Adding files|",
+      "[OPTRACE]|662548|438|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656515497155|END|Adding files|",
+      "[OPTRACE]|662548|439|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656515497155|START|Configure IP Cache|",
+      "[OPTRACE]|662548|440|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656515497162|END|Configure IP Cache|",
+      "[OPTRACE]|662548|441|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_7_synth_1/pfm_dynamic_m00_regslice_7.tcl|vivado_synth|1656515497162|END|pfm_dynamic_m00_regslice_7_synth_1|",
+      "[OPTRACE]|662620|442|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656515506278|START|pfm_dynamic_m01_regslice_7_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662620|443|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656515506280|START|Creating in-memory project|",
+      "[OPTRACE]|662620|444|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656515511584|END|Creating in-memory project|",
+      "[OPTRACE]|662620|445|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656515511584|START|Adding files|",
+      "[OPTRACE]|662620|446|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656515511796|END|Adding files|",
+      "[OPTRACE]|662620|447|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656515511796|START|Configure IP Cache|",
+      "[OPTRACE]|662620|448|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656515511803|END|Configure IP Cache|",
+      "[OPTRACE]|662620|449|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_7_synth_1/pfm_dynamic_m01_regslice_7.tcl|vivado_synth|1656515511803|END|pfm_dynamic_m01_regslice_7_synth_1|",
+      "[OPTRACE]|662691|450|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656515520907|START|pfm_dynamic_s00_regslice_19_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662691|451|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656515520911|START|Creating in-memory project|",
+      "[OPTRACE]|662691|452|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656515526196|END|Creating in-memory project|",
+      "[OPTRACE]|662691|453|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656515526196|START|Adding files|",
+      "[OPTRACE]|662691|454|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656515526413|END|Adding files|",
+      "[OPTRACE]|662691|455|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656515526413|START|Configure IP Cache|",
+      "[OPTRACE]|662691|456|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656515526420|END|Configure IP Cache|",
+      "[OPTRACE]|662691|457|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_19_synth_1/pfm_dynamic_s00_regslice_19.tcl|vivado_synth|1656515526420|END|pfm_dynamic_s00_regslice_19_synth_1|",
+      "[OPTRACE]|662765|458|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656515535553|START|pfm_dynamic_m00_regslice_8_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662765|459|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656515535556|START|Creating in-memory project|",
+      "[OPTRACE]|662765|460|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656515540832|END|Creating in-memory project|",
+      "[OPTRACE]|662765|461|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656515540833|START|Adding files|",
+      "[OPTRACE]|662765|462|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656515541056|END|Adding files|",
+      "[OPTRACE]|662765|463|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656515541057|START|Configure IP Cache|",
+      "[OPTRACE]|662765|464|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656515541063|END|Configure IP Cache|",
+      "[OPTRACE]|662765|465|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_8_synth_1/pfm_dynamic_m00_regslice_8.tcl|vivado_synth|1656515541063|END|pfm_dynamic_m00_regslice_8_synth_1|",
+      "[OPTRACE]|662838|466|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656515550192|START|pfm_dynamic_m01_regslice_8_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662838|467|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656515550196|START|Creating in-memory project|",
+      "[OPTRACE]|662838|468|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656515555508|END|Creating in-memory project|",
+      "[OPTRACE]|662838|469|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656515555508|START|Adding files|",
+      "[OPTRACE]|662838|470|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656515555724|END|Adding files|",
+      "[OPTRACE]|662838|471|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656515555725|START|Configure IP Cache|",
+      "[OPTRACE]|662838|472|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656515555731|END|Configure IP Cache|",
+      "[OPTRACE]|662838|473|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_8_synth_1/pfm_dynamic_m01_regslice_8.tcl|vivado_synth|1656515555731|END|pfm_dynamic_m01_regslice_8_synth_1|",
+      "[OPTRACE]|662911|474|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656515564835|START|pfm_dynamic_m00_regslice_9_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662911|475|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656515564838|START|Creating in-memory project|",
+      "[OPTRACE]|662911|476|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656515570145|END|Creating in-memory project|",
+      "[OPTRACE]|662911|477|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656515570145|START|Adding files|",
+      "[OPTRACE]|662911|478|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656515570361|END|Adding files|",
+      "[OPTRACE]|662911|479|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656515570361|START|Configure IP Cache|",
+      "[OPTRACE]|662911|480|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656515570367|END|Configure IP Cache|",
+      "[OPTRACE]|662911|481|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m00_regslice_9_synth_1/pfm_dynamic_m00_regslice_9.tcl|vivado_synth|1656515570368|END|pfm_dynamic_m00_regslice_9_synth_1|",
+      "[OPTRACE]|662982|482|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656515579436|START|pfm_dynamic_m01_regslice_9_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|662982|483|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656515579440|START|Creating in-memory project|",
+      "[OPTRACE]|662982|484|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656515584716|END|Creating in-memory project|",
+      "[OPTRACE]|662982|485|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656515584716|START|Adding files|",
+      "[OPTRACE]|662982|486|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656515584930|END|Adding files|",
+      "[OPTRACE]|662982|487|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656515584931|START|Configure IP Cache|",
+      "[OPTRACE]|662982|488|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656515584937|END|Configure IP Cache|",
+      "[OPTRACE]|662982|489|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_m01_regslice_9_synth_1/pfm_dynamic_m01_regslice_9.tcl|vivado_synth|1656515584937|END|pfm_dynamic_m01_regslice_9_synth_1|",
+      "[OPTRACE]|663053|490|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656515594057|START|pfm_dynamic_s00_regslice_21_synth_1|ROLLUP_AUTO",
+      "[OPTRACE]|663053|491|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656515594060|START|Creating in-memory project|",
+      "[OPTRACE]|663053|492|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656515599331|END|Creating in-memory project|",
+      "[OPTRACE]|663053|493|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656515599331|START|Adding files|",
+      "[OPTRACE]|663053|494|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656515599548|END|Adding files|",
+      "[OPTRACE]|663053|495|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656515599549|START|Configure IP Cache|",
+      "[OPTRACE]|663053|496|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656515599555|END|Configure IP Cache|",
+      "[OPTRACE]|663053|497|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/pfm_dynamic_s00_regslice_21_synth_1/pfm_dynamic_s00_regslice_21.tcl|vivado_synth|1656515599555|END|pfm_dynamic_s00_regslice_21_synth_1|",
+      "[OPTRACE]|663125|498|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515608633|START|Implementation|ROLLUP_1",
+      "[OPTRACE]|663125|499|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515608634|START|Phase: Init Design|ROLLUP_AUTO",
+      "[OPTRACE]|663125|500|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515608635|START|Design Initialization: pre hook|",
+      "[OPTRACE]|663125|501|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515608653|END|Design Initialization: pre hook|",
+      "[OPTRACE]|663125|502|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515608654|START|create in-memory project|",
+      "[OPTRACE]|663125|503|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515610071|END|create in-memory project|",
+      "[OPTRACE]|663125|504|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515610071|START|set parameters|",
+      "[OPTRACE]|663125|505|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515613959|END|set parameters|",
+      "[OPTRACE]|663125|506|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515613959|START|add files|",
+      "[OPTRACE]|663125|507|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515618638|START|read constraints: implementation|",
+      "[OPTRACE]|663125|508|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515618639|END|read constraints: implementation|",
+      "[OPTRACE]|663125|509|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515618639|END|add files|",
+      "[OPTRACE]|663125|510|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656515618639|START|link_design|",
+      "[OPTRACE]|663125|511|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054614|END|link_design|",
+      "[OPTRACE]|663125|512|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054614|START|gray box cells|",
+      "[OPTRACE]|663125|513|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054614|END|gray box cells|",
+      "[OPTRACE]|663125|514|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054614|START|Design Initialization: post hook|",
+      "[OPTRACE]|663125|515|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054695|END|Design Initialization: post hook|",
+      "[OPTRACE]|663125|516|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054695|START|init_design_reports|REPORT",
+      "[OPTRACE]|663125|517|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054695|END|init_design_reports|",
+      "[OPTRACE]|663125|518|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054695|START|init_design_write_hwdef|",
+      "[OPTRACE]|663125|519|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054695|END|init_design_write_hwdef|",
+      "[OPTRACE]|663125|520|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054695|END|Phase: Init Design|",
+      "[OPTRACE]|663125|521|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054696|START|Phase: Opt Design|ROLLUP_AUTO",
+      "[OPTRACE]|663125|522|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516054696|START|Opt Design: pre hook|",
+      "[OPTRACE]|663125|523|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516073300|END|Opt Design: pre hook|",
+      "[OPTRACE]|663125|524|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516073301|START|read constraints: opt_design|",
+      "[OPTRACE]|663125|525|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516073301|END|read constraints: opt_design|",
+      "[OPTRACE]|663125|526|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516073301|START|opt_design|",
+      "[OPTRACE]|663125|527|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516534510|END|opt_design|",
+      "[OPTRACE]|663125|528|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516534510|START|read constraints: opt_design_post|",
+      "[OPTRACE]|663125|529|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516534510|END|read constraints: opt_design_post|",
+      "[OPTRACE]|663125|530|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516534510|START|Opt Design: post hook|",
+      "[OPTRACE]|663125|531|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558216|END|Opt Design: post hook|",
+      "[OPTRACE]|663125|532|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558216|START|opt_design reports|REPORT",
+      "[OPTRACE]|663125|533|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558216|END|opt_design reports|",
+      "[OPTRACE]|663125|534|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558217|END|Phase: Opt Design|",
+      "[OPTRACE]|663125|535|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558217|START|Phase: Place Design|ROLLUP_AUTO",
+      "[OPTRACE]|663125|536|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558218|START|Place Design: pre hook|",
+      "[OPTRACE]|663125|537|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558250|END|Place Design: pre hook|",
+      "[OPTRACE]|663125|538|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558250|START|read constraints: place_design|",
+      "[OPTRACE]|663125|539|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558250|END|read constraints: place_design|",
+      "[OPTRACE]|663125|540|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558250|START|implement_debug_core|",
+      "[OPTRACE]|663125|541|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558251|END|implement_debug_core|",
+      "[OPTRACE]|663125|542|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656516558251|START|place_design|",
+      "[OPTRACE]|663125|543|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518397779|END|place_design|",
+      "[OPTRACE]|663125|544|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518397779|START|read constraints: place_design_post|",
+      "[OPTRACE]|663125|545|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518397780|END|read constraints: place_design_post|",
+      "[OPTRACE]|663125|546|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518397780|START|Place Design: post hook|",
+      "[OPTRACE]|663125|547|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518419223|END|Place Design: post hook|",
+      "[OPTRACE]|663125|548|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518419223|START|place_design reports|REPORT",
+      "[OPTRACE]|663125|549|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518419223|END|place_design reports|",
+      "[OPTRACE]|663125|550|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518419224|END|Phase: Place Design|",
+      "[OPTRACE]|663125|551|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518419224|START|Phase: Physical Opt Design|ROLLUP_AUTO",
+      "[OPTRACE]|663125|552|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518419224|START|read constraints: phys_opt_design|",
+      "[OPTRACE]|663125|553|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518419224|END|read constraints: phys_opt_design|",
+      "[OPTRACE]|663125|554|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656518419225|START|phys_opt_design|",
+      "[OPTRACE]|663125|555|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656519152391|END|phys_opt_design|",
+      "[OPTRACE]|663125|556|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656519152391|START|read constraints: phys_opt_design_post|",
+      "[OPTRACE]|663125|557|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656519152391|END|read constraints: phys_opt_design_post|",
+      "[OPTRACE]|663125|558|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656519152391|START|phys_opt_design report|REPORT",
+      "[OPTRACE]|663125|559|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656519152391|END|phys_opt_design report|",
+      "[OPTRACE]|663125|560|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656519152392|END|Phase: Physical Opt Design|",
+      "[OPTRACE]|663125|561|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656519152392|START|Phase: Route Design|ROLLUP_AUTO",
+      "[OPTRACE]|663125|562|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656519152392|START|read constraints: route_design|",
+      "[OPTRACE]|663125|563|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656519152392|END|read constraints: route_design|",
+      "[OPTRACE]|663125|564|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656519152393|START|route_design|",
+      "[OPTRACE]|663125|565|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521677055|END|route_design|",
+      "[OPTRACE]|663125|566|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521677055|START|read constraints: route_design_post|",
+      "[OPTRACE]|663125|567|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521677055|END|read constraints: route_design_post|",
+      "[OPTRACE]|663125|568|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521677055|START|Route Design: post hook|",
+      "[OPTRACE]|663125|569|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521759915|END|Route Design: post hook|",
+      "[OPTRACE]|663125|570|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521759916|START|Route Design: write_checkpoint|CHECKPOINT",
+      "[OPTRACE]|663125|571|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521887551|END|Route Design: write_checkpoint|",
+      "[OPTRACE]|663125|572|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521887551|START|route_design reports|REPORT",
+      "[OPTRACE]|663125|573|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904581|END|route_design reports|",
+      "[OPTRACE]|663125|574|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904581|START|route_design misc|",
+      "[OPTRACE]|663125|575|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904582|START|route_design write_checkpoint|CHECKPOINT",
+      "[OPTRACE]|663125|576|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904582|END|route_design write_checkpoint|",
+      "[OPTRACE]|663125|577|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904583|END|route_design misc|",
+      "[OPTRACE]|663125|578|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904583|END|Phase: Route Design|",
+      "[OPTRACE]|663125|579|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904583|START|Phase: Write Bitstream|ROLLUP_AUTO",
+      "[OPTRACE]|663125|580|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904583|START|write_bitstream setup|",
+      "[OPTRACE]|663125|581|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904583|START|Write Bitstream: pre hook|",
+      "[OPTRACE]|663125|582|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904583|END|Write Bitstream: pre hook|",
+      "[OPTRACE]|663125|583|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904584|START|read constraints: write_bitstream|",
+      "[OPTRACE]|663125|584|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904584|END|read constraints: write_bitstream|",
+      "[OPTRACE]|663125|585|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904585|END|write_bitstream setup|",
+      "[OPTRACE]|663125|586|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656521904585|START|write_bitstream|",
+      "[OPTRACE]|663125|587|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656522629390|END|write_bitstream|",
+      "[OPTRACE]|663125|588|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656522629391|START|write_bitstream misc|",
+      "[OPTRACE]|663125|589|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656522629391|START|read constraints: write_bitstream_post|",
+      "[OPTRACE]|663125|590|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656522629391|END|read constraints: write_bitstream_post|",
+      "[OPTRACE]|663125|591|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656522629391|START|Write Bitstream: post hook|",
+      "[OPTRACE]|663125|592|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656522629392|END|Write Bitstream: post hook|",
+      "[OPTRACE]|663125|593|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656522629398|END|write_bitstream misc|",
+      "[OPTRACE]|663125|594|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656522629398|END|Phase: Write Bitstream|",
+      "[OPTRACE]|663125|595|/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/xclbin_files/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper.tcl|vivado_impl|1656522629398|END|Implementation|"
+      ];
+
+  var legendData = [
+  { "title": "Report Generation",
+    "color": "#b9783f"
+  }, {
+    "title": "Write Checkpoint",
+    "color": "#cd82ad"
+  },
+  {
+    "title": "Incomplete Data",
+    "color": "#cc4748"
+  } ];
+
+  // -- Convert Raw data into something we can use ---------------------------
+  console.log("Convert log data (%s entries) to Javascript 'JSON' objects...", csvData.length);
+  var jsonData = csvArrayToJSON(header, csvData, "|");
+
+  // -- Clean up the JSON objects --------------------------------------------
+  for (var i = 0; i < jsonData.length; i++) {
+    jsonData[i].Action = jsonData[i].Action.toUpperCase();
+    jsonData[i].Tags = jsonData[i].Tags.toUpperCase();
+    jsonData[i].Tags = jsonData[i].Tags.trim();
+    jsonData[i].TimeStampMSec = parseInt(jsonData[i].TimeStampMSec, 10);
+    jsonData[i].pid = parseInt(jsonData[i].pid, 10);
+  }
+
+  // -- Sort JSON array ------------------------------------------------------
+  console.log("Sorting JSON objects (%s objects) according to timestamps...", jsonData.length);
+  jsonData.sort(compareByTimeStamp);
+
+  // Record the PID grouping order
+  var pidOrder = new Map();
+  for (var i = 0; i < jsonData.length; i++) {
+    if (pidOrder.has(jsonData[i].pid) == false) {
+      pidOrder.set(jsonData[i].pid, i);    // Simple ordering (lower is first)
+    }
+  }
+
+  // -- Create secondary data array for the chart data array -----------------
+  console.log("Preparing graph data...");
+
+  // Task limits
+  var m_startTS = 0;      // Earliest Timestamp
+  var m_endTS = 0;        // Latest Timestamp
+
+  if (jsonData.length > 0) {
+    m_startTS = jsonData[0].TimeStampMSec;
+    m_endTS = jsonData[jsonData.length - 1].TimeStampMSec;
+  }
+
+
+  var chartData = [ ];   // Empty JSON array
+
+
+  populateChartData();
+  tableCreate( chartData );
+
+  filterChartEntries();
+
+  // -- Search for "holes"
+  // -- Sort by common PID
+  // -- Create groupings by process
+
+  console.log("done");
+
+  var chart = AmCharts.makeChart("chartdiv", {
+    "type": "gantt",
+    "theme": "light",
+    "titles": [
+    { "text": "OPTrace", "size": 15}],
+    "marginRight": 70,
+    "period": "fff",                                     // X-Axis
+    "balloonDateFormat": "JJ:NN:SS",
+    "columnWidth": 0.5,                                 // Bar thickness
+    "valueAxis": {
+      "type": "numeric",
+      "title": "Time [HH:MM::SS]",
+      "duration": "ss",
+      "durationUnits": { DD: 'd. ', hh: ':', mm: ':', ss: '' },
+    },
+    "brightnessStep": 10,
+    "graph": {
+      "fillAlphas": 1,
+      "labelFunction": barLabelCallBack,
+      "labelText": " ",
+      "labelPosition": "right",
+      "balloonFunction": ballonLabelCallBack,
+      "balloonText": "<p align='left'> Task: [[task]]<br/>Start:[[start]]<br/>End:[[end]]<br/>Duration:[[duration]]</p>",
+      "bulletField": "bullet",
+      "bulletSize": 8
+    },
+    "rotate": true,
+    "categoryField": "category",
+    "segmentsField": "segments",
+    "colorField": "color",
+    "startDate": "2015-01-01 00:00:00",
+    "startField": "start",
+    "endField": "end",
+    "durationField": "duration",
+    "dataProvider": chartData,
+    "valueScrollbar": {
+      "autoGridCount": true
+    },
+    "chartScrollbar": {
+      "enable": true
+    },
+    "chartCursor": {
+      "cursorColor": "#55bb76",
+      "valueBalloonsEnabled": false,
+      "cursorAlpha": 0.1,
+      "valueLineAlpha": 0.5,
+      "valueLineBalloonEnabled": true,
+      "valueLineEnabled": true,
+      "zoomable": true,
+      "valueZoomable": true,
+      "fullWidth": true
+    },
+    "legend": {
+      "data": legendData,
+    },
+    "export": {
+      "enabled": true
+    }
+  });
+
+  // =========================================================================
+  // Call back methods
+  // =========================================================================
+function ballonLabelCallBack( _graphDataItem )
+{
+  var start = _graphDataItem.values.open;
+  var end = _graphDataItem.values.value;
+  var duration = end - start;
+
+  var result = "<p align='left'>Task: " + _graphDataItem.category + "<br/>Start: " + secondsToHHMMSS(start) + "<br/>End: " + secondsToHHMMSS( end ) + "<br/>Duration: " + secondsToHHMMSS( duration ) + "</p>";
+  return result;
+}
+
+
+function barLabelCallBack( _graphDataItem )
+{
+   var duration = _graphDataItem.values.value - _graphDataItem.values.open;
+
+   return secondsToHHMMSS( duration);
+}
+
+
+function userInputFormCallback()
+{
+  // Second filter
+  m_secondFilter = document.getElementById("userDurationFilterSecInput").value;
+  console.log("Setting second filter to: " + m_secondFilter + " seconds");
+
+  // Group PID Sort
+  m_groupPidSort = document.getElementById("userGroupPidSortSelected").checked;
+  console.log("Group PID filter is set to: " + m_groupPidSort);
+
+  // Rollup filter
+  m_showRollup = document.getElementById("userRollupSelected").checked;
+  console.log("Rollup filter is set to: " + m_showRollup);
+
+  // Individual filter
+  m_showIndividualEntry = document.getElementById("userIndividualEntrySelected").checked;
+  console.log("Individual filter is set to: " + m_showIndividualEntry);
+
+  // Checkpoint Report Entries filter
+  m_showCheckpointEntry = document.getElementById("userCheckpointEntrySelected").checked;
+  console.log("Checkpoint Entry filter is set to: " + m_showCheckpointEntry);
+
+  // Checkpoint Report Entries filter
+  m_showReportEntry = document.getElementById("userReportEntrySelected").checked;
+  console.log("Report Entry filter is set to: " + m_showReportEntry);
+
+  populateChartData();
+  filterChartEntries()
+  chart.dataProvider = chartData;
+  chart.validateData();
+}
+
+  // =========================================================================
+  // Utilities
+  // =========================================================================
+
+
+function populateChartData()
+{
+  chartData = [ ];
+  if (m_groupPidSort == false) {
+    jsonData.sort(compareByTimeStamp);
+  } else {
+    jsonData.sort(compareByGroupTimeStamp);
+  }
+
+  for (var i = 0; i < jsonData.length; i++) {
+    var timestamp = parseInt(jsonData[0].TimeStampMSec, 10);
+
+    if (m_startTS > timestamp) m_startTS = timestamp;
+    if (m_endTS < timestamp) m_endTS = timestamp;
+
+    for (var i = 0; i < jsonData.length; i++) {
+      switch (jsonData[i].Action) {
+      case "START":
+        var categoryEntry = { };
+        categoryEntry["category"] = jsonData[i].Task;
+        categoryEntry["pid"] = jsonData[i].pid;
+
+        var segmentEntry = { };
+        // Normalize entry and convert to seconds
+        segmentEntry["start"] = (jsonData[i].TimeStampMSec - m_startTS) / 1000;
+        segmentEntry["color"] = getTaskBarColor(jsonData[i].Tags)
+        segmentEntry["task"] = jsonData[i].Task;
+        segmentEntry["tags"] = jsonData[i].Tags;
+        segmentEntry["duration"] = -1;
+
+        categoryEntry["segments"] = [ ];
+        categoryEntry["segments"].push(segmentEntry);
+        chartData.push(categoryEntry);
+        break;
+
+      case "END":
+        var catagory = findCatagory(jsonData[i].pid, jsonData[i].Task, chartData);
+        if (catagory != null) {
+          var segmentsEntry = catagory.segments[0];
+          segmentsEntry["end"] = (jsonData[i].TimeStampMSec - m_startTS) / 1000;
+          segmentsEntry["duration"] = segmentsEntry.end - segmentsEntry.start;
+        } else {
+          console.log("Null entry found: pid:%s, Task: %s", jsonData[i].pid, jsonData[i].Task);
+        }
+
+        break;
+
+      default:
+        console.log("Default");
+        break;
+      }
+    }
+  }
+}
+
+function filterChartEntries()
+{
+  for(var i = chartData.length - 1; i >= 0; i--) {
+    var segment = chartData[i].segments[0];
+
+    // -- Remove entries less than 1 seconds
+    if ( segment["duration"] == -1) {
+      segment["bullet"] = "xError";
+      segment["color"] = "#cc4748";
+      segment["duration"] = ((m_endTS - m_startTS) / 1000) - segment["start"];
+    } else if (segment["duration"] <  m_secondFilter) {
+      chartData.splice(i, 1);
+      continue;
+    }
+  
+
+    // Filter by tags
+    var bHasRollup = false;
+    var bHasCheckpoint = false;
+    var bHasReport = false;
+
+    var tags = segment["tags"];
+    console.log("Tag: " + tags);
+    if (tags.search(/ROLLUP_/i) != -1) { bHasRollup = true; }
+    if (tags.search(/CHECKPOINT/i) != -1) { bHasCheckpoint = true; }
+    if (tags.search(/REPORT/i) != -1) { bHasReport = true; }
+
+    var bRemoveEntry = false;
+
+    // Remove rollups
+    if ((m_showRollup == false) && (bHasRollup == true)) {
+      bRemoveEntry = true;
+    }
+    
+    // Remove checkpoints    
+    if ((m_showCheckpointEntry == false) && (bHasCheckpoint == true)) {
+      bRemoveEntry = true;
+    }
+
+    // Remove reports
+    if ((m_showReportEntry == false) && (bHasReport == true)) {
+      bRemoveEntry = true;
+    }
+
+    // Remove individual entry
+    if (((m_showIndividualEntry == false) && 
+         ((bHasRollup == false) &&
+          (bHasCheckpoint == false) &&
+          (bHasReport == false)))) {
+      bRemoveEntry = true;
+    }
+
+    if (bRemoveEntry == true) {
+      chartData.splice(i, 1);
+      continue;
+    }
+  }
+
+  console.log("ChartData.length: " + chartData.length);
+}
+
+
+function getTaskBarColor( _tags )
+{
+  if (_tags == null)
+    return "#8dc49f";
+
+  if (_tags.search(/ROLLUP_AUTO/i) != -1){ return "#0099ff"; }
+  if (_tags.search(/ROLLUP_0/i) != -1)   { return "#006699"; }
+  if (_tags.search(/ROLLUP_1/i) != -1)   { return "#009933"; }
+  if (_tags.search(/ROLLUP_2/i) != -1)   { return "#66ccff"; }
+  if (_tags.search(/REPORT/i) != -1)     { return "#b9783f"; }
+  if (_tags.search(/CHECKPOINT/i) != -1) { return "#cd82ad"; }
+
+  return "#8dc49f"
+}
+
+
+function tableCreate( _chartData ){
+    var myTableDiv = document.getElementById("myDynamicTable");
+
+
+    for ( var i = 0; i < _chartData.length; i++) {
+      var tr = myTableDiv.insertRow();
+
+      var td_task = tr.insertCell();
+      td_task.appendChild(document.createTextNode( _chartData[i].category ));
+
+      var segmentEntry = _chartData[i].segments;
+      var td_start = tr.insertCell();
+      td_start.appendChild(document.createTextNode( secondsToHHMMSS(segmentEntry[0].start) ));
+
+      var td_duration = tr.insertCell();
+      td_duration.appendChild(document.createTextNode( secondsToHHMMSS(segmentEntry[0].duration) ));
+
+    }
+}
+
+function secondsToHHMMSS( _seconds )
+{
+  var hours = Math.floor(_seconds / 3600);
+  var minutes = Math.floor(_seconds % 3600 / 60);
+  var seconds = Math.floor(_seconds % 3600 % 60);
+
+  var result = hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds; 
+
+  return result;
+}
+
+
+  function findCatagory(_pid, _category, _catagoryArray) {
+    for (var i = (_catagoryArray.length - 1); i >= 0; i--) {
+      if (_pid == _catagoryArray[i].pid) {
+        if (_catagoryArray[i].category == _category) {
+          return  _catagoryArray[i];
+        }
+      }
+    }
+    return null;
+  }
+
+
+  // Compares the timestamps between to JSON objects
+  function compareByTimeStamp(_a, _b) {
+    if (_a.TimeStampMSec < _b.TimeStampMSec) return -1;
+    if (_a.TimeStampMSec > _b.TimeStampMSec) return 1;
+
+    if (_a.pid == _b.pid) {
+      if ((_a.Action == "START") && (_b.Action == "END")) return -1;
+      if ((_a.Action == "END") && (_b.Action == "START")) return 1;
+
+      if(_a.Entry < _b.Entry) return -1;
+      if(_a.Entry > _b.Entry) return 1;
+    }
+
+    return 0;
+  }
+
+
+  // Compares the timestamps between to JSON objects
+  function compareByGroupTimeStamp(_a, _b) {
+    if (pidOrder.get(_a.pid) < pidOrder.get(_b.pid)) return -1;
+
+    if (pidOrder.get(_a.pid) > pidOrder.get(_b.pid)) return 1;
+
+    return compareByTimeStamp(_a, _b);
+  }
+
+
+  // Return array of string values, or NULL if CSV string not well formed.
+  function CSVtoArray(_text, _sep) {
+    // Regex expressions
+    var re_valid_default = /^\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*(?:,\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*)*$/;
+    var re_value_default = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g;
+    var re_special_default = /,\s*$/;
+
+    // Algorithm:
+    //   1) Convert regex expression to a string.
+    //   2) Remove leading regex escape character (e.g., '\')
+    //   3) Remove training regex escape character(s) (e.g., '\' or "\g")
+    //   4) Replace the comma (',') character witht he new delimiter character
+    //   5) Build the regex command
+
+    // Check delimiter, if special insert escapes
+    if (_sep == "|") _sep = "\\|";
+
+    var re_valid = new RegExp(re_valid_default.toString().substr(1).slice(0, -1).replace(/,/g, _sep));
+    var re_value = new RegExp(re_value_default.toString().substr(1).slice(0, -2).replace(/,/g, _sep), 'g');
+    var re_special = new RegExp(re_special_default.toString().substr(1).slice(0, -1).replace(/,/g, _sep));
+
+    // Validate the input string to determine if it is well formed
+    if (!re_valid.test(_text)) return null;
+
+    var a = [ ];                     // Initialize array to receive values.
+    _text.replace(re_value,           // "Walk" the string using replace with callback.
+                  function(m0, m1, m2, m3) {
+                      // Remove backslash from \' in single quoted values.
+                      if      (m1 !== undefined) a.push(m1.replace(/\\'/g, "'"));
+                      // Remove backslash from \" in double quoted values.
+                      else if (m2 !== undefined) a.push(m2.replace(/\\"/g, '"'));
+                      else if (m3 !== undefined) a.push(m3);
+                      return ''; // Return empty string.
+                  });
+
+    // Handle special case of empty last value.
+    if (re_special.test(_text)) a.push('');
+
+    return a;
+  };
+
+
+  // Converts the given CSV array & header into a JSON array
+  function csvArrayToJSON(_header, _csvArray, _sep) {
+    var result = [ ];
+    var headers = CSVtoArray(_header, _sep);
+
+    for (var i = 0; i < _csvArray.length; i++) {
+
+      var obj = { };
+      var currentline = CSVtoArray(_csvArray[i], _sep);
+
+      for (var j = 0; j < headers.length; j++) {
+        obj[headers[j]] = currentline[j];
+      }
+
+      result.push(obj);
+
+    }
+
+    return result; //JavaScript object
+  }
+
+
+</script>
+</body>
+
+</html>
+

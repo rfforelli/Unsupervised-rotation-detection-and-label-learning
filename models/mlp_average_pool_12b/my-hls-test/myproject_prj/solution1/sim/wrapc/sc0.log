@@ -1,0 +1,8 @@
+make[1]: Entering directory '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/wrapc'
+   Build using "/home/ferroelectric/Xilinx_2020/Vivado/2020.1/tps/lnx64/gcc-6.2.0/bin/g++"
+   Compiling apatb_myproject_axi.cpp
+   Compiling myproject_test.cpp_pre.cpp.tb.cpp
+   Compiling myproject_axi.cpp_pre.cpp.tb.cpp
+   Compiling myproject.cpp_pre.cpp.tb.cpp
+   Generating cosim.tv.exe
+make[1]: Leaving directory '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/sim/wrapc'

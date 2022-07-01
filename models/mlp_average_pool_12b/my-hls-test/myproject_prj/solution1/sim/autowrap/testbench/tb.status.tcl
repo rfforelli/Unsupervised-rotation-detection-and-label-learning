@@ -1,0 +1,1 @@
+set ::AESL_AUTOSIM::gTopFileName /home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/./sim/autowrap/testbench/myproject_axi.cpp_pre.cpp.tb.cpp

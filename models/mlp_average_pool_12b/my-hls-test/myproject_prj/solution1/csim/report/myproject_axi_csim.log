@@ -1,0 +1,19 @@
+INFO: [SIM 2] *************** CSIM start ***************
+INFO: [SIM 4] CSIM will launch GCC as the compiler.
+make[1]: Entering directory '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/csim/build'
+   Compiling ../../../../myproject_test.cpp in debug mode
+   Compiling ../../../../firmware/myproject.cpp in debug mode
+   Compiling ../../../../firmware/myproject_axi.cpp in debug mode
+   Generating csim.exe
+make[1]: Leaving directory '/home/ferroelectric/Desktop/Unsupervised-rotation-detection-and-label-learning/models/mlp_average_pool_12b/my-hls-test/myproject_prj/solution1/csim/build'
+INFO: Unable to open input/predictions file, using default input.
+{ data: -9.30273, last: 0 }
+ { data: 3.90918, last: 0 }
+ { data: -1.47656, last: 0 }
+ { data: 0, last: 0 }
+ { data: 0, last: 0 }
+ { data: -1.54297, last: 1 }
+ 
+INFO: Saved inference results to file: tb_data/csim_results.log
+INFO: [SIM 1] CSim done with 0 errors.
+INFO: [SIM 3] *************** CSIM finish ***************

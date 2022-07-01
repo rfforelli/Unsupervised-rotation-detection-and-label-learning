@@ -201,6 +201,57 @@ def create_mlp_avg_pool(precision):
     x = QDense(6, **kwargs)(x) # 6 elements to describe the transformation
     return keras.Model(inputs, x)
 
+def create_mlp_avg_pool_extra_small(precision):
+
+    bits = precision
+
+    kwargs = {'kernel_quantizer': quantized_bits(bits,6,alpha=1),
+              'bias_quantizer': quantized_bits(bits,6,alpha=1), 
+              'kernel_initializer': 'lecun_uniform', 
+          }
+    inputs = keras.Input(shape=(120,120, 1), name='input_1')
+    x = AveragePooling2D((4, 4),strides=4)(inputs)
+    x = Flatten()(x)
+
+    x = QDense(32,**kwargs)(x)
+    x = BatchNormalization()(x)
+    x = QActivation(activation=quantized_relu(12, 3))(x)
+
+    x = QDense(16,**kwargs)(x)
+    x = BatchNormalization()(x)
+    x = QActivation(activation=quantized_relu(12, 3))(x)
+
+    x = QDense(6, **kwargs)(x) # 6 elements to describe the transformation
+    return keras.Model(inputs, x)
+
+
+def create_mlp_avg_pool_old(precision):
+
+    bits = precision
+
+    kwargs = {'kernel_quantizer': quantized_bits(bits,6,alpha=1),
+              'bias_quantizer': quantized_bits(bits,6,alpha=1), 
+              'kernel_initializer': 'lecun_uniform', 
+          }
+    inputs = keras.Input(shape=(120,120, 1), name='input_1')
+    x = AveragePooling2D((4, 4),strides=4)(inputs)
+    x = Flatten()(x)
+    
+    x = QDense(64,**kwargs)(x)
+    x = BatchNormalization()(x)
+    x = QActivation(activation='quantized_relu')(x)
+
+    x = QDense(32,**kwargs)(x)
+    x = BatchNormalization()(x)
+    x = QActivation(activation='quantized_relu')(x)
+
+    x = QDense(16,**kwargs)(x)
+    x = BatchNormalization()(x)
+    x = QActivation(activation='quantized_relu')(x)
+
+    x = QDense(6, **kwargs)(x) # 6 elements to describe the transformation
+    return keras.Model(inputs, x)
+
 def create_mlp_avg_pool_large(precision):
 
     bits = precision
